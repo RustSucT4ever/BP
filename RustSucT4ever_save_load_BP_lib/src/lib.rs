@@ -1,13 +1,15 @@
-fn load_BP(file_path: &string) -> (&string){
+fn load_bp(file_path: &String) -> String{
     // datei lesen
     // deserialisieren
     // überprüfen ob das geladene auch ein BP ist
     // ausgeben
+    return String::from ("")
 }
 
-fn save_BP(&string) -> (file_path: &string){
+fn save_bp(tree: &String) -> String{
     // serialisieren
     // datei speichern
+    return String::from ("")
 }
 
 
@@ -15,9 +17,9 @@ fn save_BP(&string) -> (file_path: &string){
 mod tests {
     #[test]
     fn load_loads_the_same_that_has_been_saved() {
-        let example = "1100";
-        example_path = save_BP(example);
-        checksum = load_BP(example_path);
+        let example = String::from("1100");
+        let example_path = String::from(save_BP(&example));
+        let checksum = String::from(load_BP(example_path));
         assert_eq!(checksum, example);
     }
 }
