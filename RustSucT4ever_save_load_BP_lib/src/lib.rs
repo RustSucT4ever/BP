@@ -38,7 +38,7 @@ fn load_bp(file_path: &String) -> BitVec {
 
     if !correct {
         println!("Kein BP Tree!");
-    }else if correct{
+    }else{
         println!("BP Tree!");
     }
     // überprüfen ob das geladene auch ein BP ist
