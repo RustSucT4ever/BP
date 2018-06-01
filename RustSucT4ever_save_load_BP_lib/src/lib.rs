@@ -57,7 +57,11 @@ mod tests {
     use save_bp;
     #[test]
     fn load_loads_the_same_that_has_been_saved() {
-        let example = String::from("1100");
+        let mut example: BitVec = BitVec::new();
+        example.push(true);
+        example.push(true);
+        example.push(false);
+        example.push(false);
         let example_path = String::from(save_bp(&example));
         let checksum = String::from(load_bp(&example_path));
         assert_eq!(checksum, example);
