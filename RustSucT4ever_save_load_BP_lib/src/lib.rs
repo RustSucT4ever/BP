@@ -1,7 +1,7 @@
 extern crate bv;
 extern crate serde;
 extern crate serde_json;
-use bv::{BitVec};
+use bv::{BitVec, Bits};
 use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
@@ -21,10 +21,10 @@ fn load_bp(file_path: &String) -> BitVec {
     let mut correct = true; 
     let mut count = 0;
     for i in 0..l {
-        if bitVec.get(i) == true {
+        if bitVec.get_bit(i) == true {
             count = count+1;
         }
-        if bitVec.get(i) == false {
+        if bitVec.get_bit(i) == false {
             count = count-1;
             if i != l-1 && count<=0 {
                 correct = false;
@@ -37,8 +37,10 @@ fn load_bp(file_path: &String) -> BitVec {
     }
 
     if !correct {
-        println("Falscher String!");
-    } 
+        println!("Kein BP Tree!");
+    }else if correct{
+        println!("BP Tree!");
+    }
     // überprüfen ob das geladene auch ein BP ist
     //
 
