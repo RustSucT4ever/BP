@@ -1,19 +1,27 @@
+extern crate bv;
+extern crate serde;
+extern crate serde_json;
+use bv::{BitVec};
+use std::fs::File;
+use std::io::prelude::*;
 static SOME_BV_TREE: &'static str =
 "(()())
 ";
-
 use std::error::Error;
-use std::io::prelude::*;
-use std::fs::File;
 use std::path::Path;
-extern crate bv;
 
-fn load_bp(file_path: &String) -> String{
+fn load_bp(file_path: &String) -> String {
+    let mut f = File::open(&file_path).expect("file not found");
+    let mut contents = String::new();
+    f.read_to_string(&mut contents)
+        .expect("something went wrong reading the file");
+    //let mut bitVec: BitVec = serde::de::
+
     // datei lesen
     // deserialisieren
     // überprüfen ob das geladene auch ein BP ist
     // ausgeben
-    return String::from ("")
+    return String::from("");
 }
 
 fn save_bp(tree: &String) -> String{ 
@@ -41,7 +49,6 @@ fn save_bp(tree: &String) -> String{
     }
     return String::from ("")
 }
-
 
 #[cfg(test)]
 mod tests {
