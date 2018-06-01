@@ -1,3 +1,13 @@
+static SOME_BV_TREE: &'static str =
+"(()())
+";
+
+use std::error::Error;
+use std::io::prelude::*;
+use std::fs::File;
+use std::path::Path;
+extern crate bv;
+
 fn load_bp(file_path: &String) -> String{
     // datei lesen
     // deserialisieren
@@ -6,9 +16,29 @@ fn load_bp(file_path: &String) -> String{
     return String::from ("")
 }
 
-fn save_bp(tree: &String) -> String{
+fn save_bp(tree: &String) -> String{ 
     // serialisieren
+    //
     // datei speichern
+    let path = Path::new("out/our_bv_tree.txt");
+    let display = path.display();
+
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}",
+                           display,
+                           why.description()),
+        Ok(file) => file,
+    };
+
+    // Write the `LOREM_IPSUM` string to `file`, returns `io::Result<()>`
+    match file.write_all(SOME_BV_TREE.as_bytes()) {
+        Err(why) => {
+            panic!("couldn't write to {}: {}", display,
+                                               why.description())
+        },
+        Ok(_) => println!("successfully wrote to {}", display),
+    }
     return String::from ("")
 }
 
