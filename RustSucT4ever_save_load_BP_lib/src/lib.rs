@@ -17,6 +17,28 @@ fn load_bp(file_path: &String) -> BitVec {
     // deserialisieren
     let mut bitVec: BitVec = serde_json::from_str(&contents).unwrap();
 
+    let l = bitVec.len();
+    let mut correct = true; 
+    let mut count = 0;
+    for i in 0..l {
+        if bitVec.get(i) == true {
+            count = count+1;
+        }
+        if bitVec.get(i) == false {
+            count = count-1;
+            if i != l-1 && count<=0 {
+                correct = false;
+            }
+        }
+    }
+
+    if count>0 {
+        correct = false;
+    }
+
+    if !correct {
+        println("Falscher String!");
+    } 
     // überprüfen ob das geladene auch ein BP ist
     //
 
