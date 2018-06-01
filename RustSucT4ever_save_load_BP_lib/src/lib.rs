@@ -4,30 +4,30 @@ extern crate serde_json;
 use bv::{BitVec};
 use std::fs::File;
 use std::io::prelude::*;
-static SOME_BV_TREE: &'static str =
-"(()())
-";
 use std::error::Error;
 use std::path::Path;
 
 fn load_bp(file_path: &String) -> BitVec {
-    let mut f = File::open(&file_path).expect("file not found");
+    // datei lesen
+    let mut f = File::open(&file_path).expect("file not found");    
     let mut contents = String::new();
     f.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
     
-    let mut bitVec: BitVec = serde_json::from_str(&contents).unwrap();
-    return bitVec;
-    // datei lesen
     // deserialisieren
+    let mut bitVec: BitVec = serde_json::from_str(&contents).unwrap();
+
     // überprüfen ob das geladene auch ein BP ist
+    //
+
     // ausgeben
+    return bitVec;
+
+
 }
 
-fn save_bp(tree: &BitVec) -> String{ 
-    // serialisieren
-    //
-    // datei speichern
+fn save_bp(tree: &BitVec) -> String{
+    // define where to store file
     let path = Path::new("our_bv_tree.txt");
     let display = path.display();
 
@@ -39,8 +39,10 @@ fn save_bp(tree: &BitVec) -> String{
         Ok(file) => file,
     };
     
+    // serialisieren
     let bv_tree_str : String = serde_json::to_string(tree).unwrap();
-    // Write the `LOREM_IPSUM` string to `file`, returns `io::Result<()>`
+
+    // datei speichern
     match file.write_all(bv_tree_str.as_bytes()) {
         Err(why) => {
             panic!("couldn't write to {}: {}", display,
@@ -58,13 +60,20 @@ mod tests {
     use bv::{BitVec};
     #[test]
     fn load_loads_the_same_that_has_been_saved() {
+        // create an example BV tree
         let mut example = BitVec::new();
         example.push(true);
         example.push(true);
         example.push(false);
         example.push(false);
+
+        // save BV to file
         let example_path = String::from(save_bp(&example));
+
+        // load BV from file
         let checksum = load_bp(&example_path);
+
+        // be happy!
         assert_eq!(checksum, example);
     }
 }
