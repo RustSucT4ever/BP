@@ -1,5 +1,6 @@
 extern crate bv;
-mod Bp;
+mod bp;
+mod louds;
 
 trait BpLoudsCommonTrait {
     fn isleaf (pos:u64) -> bool;
@@ -10,33 +11,67 @@ trait BpLoudsCommonTrait {
 
 #[cfg(test)]
 mod tests {
-    use Bp::load_bp;
-    use Bp::save_bp;
+    use bp::load_bp;
+    use bp::save_bp;
+    use louds::load_louds;
+    use louds::save_louds;
     use bv::{BitVec, Bits};
+
     #[test]
-    fn load_loads_the_same_that_has_been_saved() {
+    fn check_bp_save_and_load() {
+        // create an example BV tree
+        let mut bp_example = BitVec::new();
+        bp_example.push(true);
+        bp_example.push(true);
+        bp_example.push(false);
+        bp_example.push(true);
+        bp_example.push(false);
+        bp_example.push(false);
+
+        // save BV to file
+        let mut bp_example_path = String::from(save_bp(&bp_example));
+
+        // load BV from file
+        let mut bp_checksum = load_bp(&bp_example_path);
+
+        // be happy!
+        assert_eq!(bp_checksum, bp_example);
+        assert_eq!(bp_checksum.get_bit(0), true);
+        assert_eq!(bp_checksum.get_bit(1), true);
+        assert_eq!(bp_checksum.get_bit(2), false);
+        assert_eq!(bp_checksum.get_bit(3), true);
+        assert_eq!(bp_checksum.get_bit(4), false);
+        assert_eq!(bp_checksum.get_bit(5), false);
+    }
+    
+    #[test]
+    fn check_louds_save_and_load() {
         // create an example BV tree
         let mut example = BitVec::new();
         example.push(true);
         example.push(true);
+        example.push(true);
         example.push(false);
         example.push(true);
         example.push(false);
         example.push(false);
+        example.push(false);
 
         // save BV to file
-        let example_path = String::from(save_bp(&example));
+        let mut example_path = String::from(save_louds(&example));
 
         // load BV from file
-        let checksum = load_bp(&example_path);
+        let mut checksum = load_louds(&example_path);
 
         // be happy!
         assert_eq!(checksum, example);
         assert_eq!(checksum.get_bit(0), true);
         assert_eq!(checksum.get_bit(1), true);
-        assert_eq!(checksum.get_bit(2), false);
-        assert_eq!(checksum.get_bit(3), true);
-        assert_eq!(checksum.get_bit(4), false);
+        assert_eq!(checksum.get_bit(2), true);
+        assert_eq!(checksum.get_bit(3), false);
+        assert_eq!(checksum.get_bit(4), true);
         assert_eq!(checksum.get_bit(5), false);
+        assert_eq!(checksum.get_bit(6), false);
+        assert_eq!(checksum.get_bit(7), false);
     }
 }

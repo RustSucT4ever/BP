@@ -54,7 +54,7 @@ pub fn load_louds(file_path: &String) -> BitVec {
 
 pub fn save_louds(tree: &BitVec) -> String{
     // define where to store file
-    let path = Path::new("our_bv_tree.txt");
+    let path = Path::new("our_louds_tree.txt");
     let display = path.display();
 
     // Open a file in write-only mode, returns `io::Result<File>`
