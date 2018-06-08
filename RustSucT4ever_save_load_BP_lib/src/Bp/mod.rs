@@ -7,17 +7,17 @@ use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
 
-fn pre_rank(pos:u64) -> u64 {
+pub fn pre_rank(pos:u64) -> u64 {
     return 1;
 }
 
-fn pre_select(pos:u64) -> u64 {
+pub fn pre_select(pos:u64) -> u64 {
     return 1;
 }
-fn ancestor(pos_x:u64,pos_y:u64) -> u64 {
+pub fn ancestor(pos_x:u64,pos_y:u64) -> u64 {
     return 1;
 }
-fn subtree_size(pos:u64) -> u64 {
+pub fn subtree_size(pos:u64) -> u64 {
     return 1;
 }
 

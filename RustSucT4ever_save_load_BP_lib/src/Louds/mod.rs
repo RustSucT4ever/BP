@@ -7,6 +7,17 @@ use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
 
+pub fn degree(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn child(pos:u64,child_number:u64) -> u64 {
+    return 1;
+}
+
+pub fn child_rank(pos:u64) -> u64 {
+    return 1;
+}
 
 pub fn load_louds(file_path: &String) -> BitVec {
     // datei lesen
