@@ -1,7 +1,7 @@
 extern crate bv;
 mod Bp;
 
-mod BpLoudsCommonTrait {
+trait BpLoudsCommonTrait {
     fn isleaf (pos:u64) -> bool;
     fn parent(pos:u64) -> u64;
     fn first_child(pos:u64) -> u64;
