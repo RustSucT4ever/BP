@@ -7,13 +7,6 @@ use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
 
-fn load_file(file_path: &String) -> String{
-    let mut f = File::open(&file_path).expect("file not found");    
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)
-        .expect("something went wrong reading the file");
-    return contents;
-}
 
 pub fn load_bp(file_path: &String) -> BitVec {
     // datei lesen
@@ -73,5 +66,13 @@ pub fn save_bp(tree: &BitVec) -> String{
         Ok(_) => println!("successfully wrote to {}", display),
     }
     return display.to_string();
+}
+
+fn load_file(file_path: &String) -> String{
+    let mut f = File::open(&file_path).expect("file not found");    
+    let mut contents = String::new();
+    f.read_to_string(&mut contents)
+        .expect("something went wrong reading the file");
+    return contents;
 }
 
