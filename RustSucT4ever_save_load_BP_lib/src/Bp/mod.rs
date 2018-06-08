@@ -14,12 +14,31 @@ pub fn pre_rank(pos:u64) -> u64 {
 pub fn pre_select(pos:u64) -> u64 {
     return 1;
 }
+
 pub fn ancestor(pos_x:u64,pos_y:u64) -> u64 {
     return 1;
 }
+
 pub fn subtree_size(pos:u64) -> u64 {
     return 1;
 }
+
+pub fn isleaf(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn parent(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn first_child(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn next_sibling(pos:u64) -> u64 {
+    return 1;
+}
+
 
 pub fn load_bp(file_path: &String) -> BitVec {
     // datei lesen

@@ -19,6 +19,22 @@ pub fn child_rank(pos:u64) -> u64 {
     return 1;
 }
 
+pub fn isleaf(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn parent(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn first_child(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn next_sibling(pos:u64) -> u64 {
+    return 1;
+}
+
 pub fn load_louds(file_path: &String) -> BitVec {
     // datei lesen
     let contents = load_file(&file_path);
