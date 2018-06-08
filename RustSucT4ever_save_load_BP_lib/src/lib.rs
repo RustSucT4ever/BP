@@ -1,6 +1,13 @@
 extern crate bv;
 mod Bp;
 
+mod BpLoudsCommonTrait {
+    fn isleaf (pos:u64) -> bool;
+    fn parent(pos:u64) -> u64;
+    fn first_child(pos:u64) -> u64;
+    fn next_sibling(pos:u64) -> u64; 
+}
+
 #[cfg(test)]
 mod tests {
     use Bp::load_bp;
