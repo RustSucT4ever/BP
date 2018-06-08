@@ -17,6 +17,7 @@ fn load_bp(file_path: &String) -> BitVec {
     // deserialisieren
     let mut bitVec: BitVec = serde_json::from_str(&contents).unwrap();
 
+    // überprüfen ob das geladene auch ein BP ist
     let l = bitVec.len();
     let mut correct = true; 
     let mut count = 0;
@@ -37,17 +38,11 @@ fn load_bp(file_path: &String) -> BitVec {
     }
 
     if !correct {
-        println!("Kein BP Tree!");
-    }else{
-        println!("BP Tree!");
+        println!("Falscher String!");
     }
-    // überprüfen ob das geladene auch ein BP ist
-    //
 
     // ausgeben
     return bitVec;
-
-
 }
 
 fn save_bp(tree: &BitVec) -> String{
@@ -109,3 +104,5 @@ mod tests {
         assert_eq!(checksum.get_bit(5), false);
     }
 }
+
+
