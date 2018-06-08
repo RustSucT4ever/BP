@@ -7,24 +7,29 @@ use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
 
-fn load_bp(file_path: &String) -> BitVec {
-    // datei lesen
+fn load_file(file_path: &String) -> String{
     let mut f = File::open(&file_path).expect("file not found");    
     let mut contents = String::new();
     f.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
-    
-    // deserialisieren
-    let mut bitVec: BitVec = serde_json::from_str(&contents).unwrap();
+    return contents;
+}
 
-    let l = bitVec.len();
+
+fn load_bp(file_path: &String) -> BitVec {
+    // datei lesen
+    let contents = load_file(&file_path);
+    // deserialisieren
+    let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
+    // überprüfen ob das geladene auch ein BP ist
+    let l = bit_vec.len();
     let mut correct = true; 
     let mut count = 0;
     for i in 0..l {
-        if bitVec.get_bit(i) == true {
+        if bit_vec.get_bit(i) == true {
             count = count+1;
         }
-        if bitVec.get_bit(i) == false {
+        if bit_vec.get_bit(i) == false {
             count = count-1;
             if i != l-1 && count<=0 {
                 correct = false;
@@ -37,17 +42,11 @@ fn load_bp(file_path: &String) -> BitVec {
     }
 
     if !correct {
-        println!("Kein BP Tree!");
-    }else{
-        println!("BP Tree!");
+        println!("Falscher String!");
     }
-    // überprüfen ob das geladene auch ein BP ist
-    //
 
     // ausgeben
-    return bitVec;
-
-
+    return bit_vec;
 }
 
 fn save_bp(tree: &BitVec) -> String{
@@ -109,3 +108,5 @@ mod tests {
         assert_eq!(checksum.get_bit(5), false);
     }
 }
+
+
