@@ -1,11 +1,44 @@
 extern crate bv;
 extern crate serde;
 extern crate serde_json;
+use common_tree;
 use bv::{BitVec, Bits};
 use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
+
+pub fn pre_rank(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn pre_select(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn ancestor(pos_x:u64,pos_y:u64) -> u64 {
+    return 1;
+}
+
+pub fn subtree_size(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn isleaf(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn parent(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn first_child(pos:u64) -> u64 {
+    return 1;
+}
+
+pub fn next_sibling(pos:u64) -> u64 {
+    return 1;
+}
 
 
 pub fn load_bp(file_path: &String) -> BitVec {
@@ -76,3 +109,25 @@ fn load_file(file_path: &String) -> String{
     return contents;
 }
 
+#[cfg(test)]
+mod tests {
+    use bv::{BitVec, Bits};
+    use bp::*;
+
+    #[test]
+    fn test_pre_rank(){
+        let test_tree : BitVec = create_test_tree();
+        assert_eq!(pre_rank(4), 3);
+    }
+
+    fn create_test_tree() -> BitVec {
+        let mut bp_example = BitVec::new();
+            bp_example.push(true);
+            bp_example.push(true);
+            bp_example.push(false);
+            bp_example.push(true);
+            bp_example.push(false);
+            bp_example.push(false);
+        return bp_example;
+    }
+}
