@@ -15,14 +15,14 @@ struct Louds {
 
 impl Louds {
     fn degree(&self, x: u64) -> u64{
-        self.dataStruct.select_0(self.dataStruct.rank_0(x).unwrap()+1).unwrap() - x
+        self.next_0(x) - x
     }
     fn child(&self,x: u64, i: u64) -> u64{
         self.dataStruct.select_0(self.dataStruct.rank_1(x).unwrap()+i-1).unwrap() + 1
     }
     fn child_rank (&self, x: u64) -> u64{
         let y = self.dataStruct.select_1(self.dataStruct.rank_0(x-1).unwrap()).unwrap();
-        y - self.dataStruct.select_0(self.dataStruct.rank_0(y).unwrap()).unwrap()
+        y - self.prev_0(y)
     }
     pub fn new(bits: BitVec<u8>) -> Louds{
         let n = bits.bit_len();
@@ -36,6 +36,12 @@ impl Louds {
         let dataStruct = RankSelect::new(bit, k as usize);
         Louds {bitString: bits, dataStruct: dataStruct}
     }
+    fn next_0(&self, x: u64) -> u64{
+        self.dataStruct.select_0(self.dataStruct.rank_0(x).unwrap()+1).unwrap()
+    }
+    fn prev_0(&self, x: u64) -> u64{
+        self.dataStruct.select_0(self.dataStruct.rank_0(x).unwrap()).unwrap()
+    }
 }
 
 impl BpLoudsCommonTrait for Louds {
@@ -43,7 +49,7 @@ impl BpLoudsCommonTrait for Louds {
         self.bitString.get_bit(pos)==false
     }
     fn parent(& self, pos:u64) -> u64{
-        self.dataStruct.select_0(self.dataStruct.rank_0(self.dataStruct.select_1(self.dataStruct.rank_0(pos-1).unwrap()).unwrap()).unwrap()).unwrap() +1
+        self.prev_0(self.dataStruct.select_1(self.dataStruct.rank_0(pos-1).unwrap()).unwrap()) +1
     }
     fn first_child(&self, pos:u64) -> u64{
         self.child(pos, 1)
