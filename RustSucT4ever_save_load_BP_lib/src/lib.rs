@@ -12,8 +12,8 @@ trait BpLoudsCommonTrait {
 
 #[cfg(test)]
 mod tests {
-    use Bp::load_bp;
-    use Bp::save_bp;
+    use bp::load_bp;
+    use bp::save_bp;
     use bv::{BitVec, Bits};
     #[test]
     fn load_loads_the_same_that_has_been_saved() {

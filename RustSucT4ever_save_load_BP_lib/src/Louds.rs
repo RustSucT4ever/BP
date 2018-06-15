@@ -54,3 +54,30 @@ impl BpLoudsCommonTrait for Louds {
         self.dataStruct.select_0(self.dataStruct.select_1(self.dataStruct.rank_0(pos-1).unwrap()+1).unwrap()+1).unwrap()
     }
 }
+
+//$Env:RUST_BACKTRACE=1
+#[cfg(test)]
+mod tests {
+    use bv::{BitVec, Bits};
+    use louds::*;
+
+    #[test]
+    fn test_is_leaf(){
+        let test_tree : Louds = create_test_tree();
+        assert!(true);
+    }    
+
+    fn create_test_tree() -> Louds {
+        let mut louds_tree = BitVec::new();
+            louds_tree.push(true);
+            louds_tree.push(true);
+            louds_tree.push(true);
+            louds_tree.push(false);
+            louds_tree.push(false);
+            louds_tree.push(true);
+            louds_tree.push(false);
+            louds_tree.push(false);
+        let louds_example = Louds::new(louds_tree);
+        return louds_example;
+    }
+}

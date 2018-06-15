@@ -117,7 +117,7 @@ mod tests {
     #[test]
     fn test_pre_rank(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(pre_rank(4), 3);
+        assert_eq!(pre_rank(4), 1);
     }
 
     fn create_test_tree() -> BitVec {
