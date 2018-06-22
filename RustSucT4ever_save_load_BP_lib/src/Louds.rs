@@ -2,7 +2,7 @@ extern crate bio;
 extern crate bv;
 use common_tree::BpLoudsCommonTrait;
 use bv::{BitVec, Bits};
-use louds::bio::data_structures::rank_select::RankSelect;
+use Louds::bio::data_structures::rank_select::RankSelect;
 
 struct Louds {
     bitString: BitVec<u8>,
@@ -71,7 +71,7 @@ impl BpLoudsCommonTrait for Louds {
 #[cfg(test)]
 mod tests {
     use bv::{BitVec, Bits};
-    use louds::*;
+    use Louds::*;
 
     #[test]
     fn test_is_leaf(){

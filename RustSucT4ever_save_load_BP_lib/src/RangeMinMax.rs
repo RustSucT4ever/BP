@@ -6,6 +6,7 @@ use std::cmp;
 struct RangeMinMax {
     blockvector: Vec<Option<Block>>,
 }
+#[derive(Copy, Clone)]
 struct Block {
     excess: u32,
     min_ex:u32,
@@ -53,18 +54,18 @@ impl RangeMinMax{
         let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
         blocks.push(b);
         let mut block_vecs = Vec::<Vec<Block>>::new();
-        block_vecs.push(blocks);
+        block_vecs.push(blocks.clone());
         
         //End of collecting the leafs. At this point the Blocks of the leafs are in a vector that is inside of block_vecs
 
         let mut last_elem_size = blocks.len();
         let mut current_vec =  blocks;
         while last_elem_size>1 {
-            let generate_vec = Vec::<Block> ::new();
-            let mut block1;
+            let mut generate_vec = Vec::<Block> ::new();
+            let mut block1=current_vec[0].clone();
             for i in 0..current_vec.len(){
                 if i%2 == 0 {
-                 block1=current_vec[i];  //check if first or last value is returned 
+                 block1=current_vec[i].clone();  //check if first or last value is returned 
                 }
                 else{
                     block1 = Block{
@@ -80,8 +81,8 @@ impl RangeMinMax{
             if current_vec.len()%2!=0{
                 generate_vec.push(block1);
             }
+            block_vecs.push(generate_vec.clone());
             current_vec = generate_vec;
-            block_vecs.push(generate_vec);
             last_elem_size = current_vec.len();
         }
         //Nun wurden die Elternknoten erstellt und in levelweise in block_vecs gepusht, wobei der Wurzelknoten ganz links steht.
@@ -90,7 +91,7 @@ impl RangeMinMax{
         //Alle Blöcke in einen neuen vec speichern und eventuell lückenfüller hinzufügen
 
         let mut range_min_max_tree = Vec::<Option<Block>>::new();
-        let pow = 1;
+        let mut pow = 1;
         for i in 0..block_vecs.len(){
             let curr_vec = block_vecs.pop().unwrap();
             for j in 0..pow{
@@ -111,7 +112,7 @@ impl RangeMinMax{
     }
         
 }
-    pub fn calc_count_min_excess(block_left:Block, block_right:Block) ->u32{
+ fn calc_count_min_excess(block_left:Block, block_right:Block) ->u32{
         if block_left.min_ex < block_left.excess + block_right.min_ex {
             return block_left.count_min_ex
         }
