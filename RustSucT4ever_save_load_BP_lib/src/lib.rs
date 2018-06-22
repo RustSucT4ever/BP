@@ -1,7 +1,8 @@
 extern crate bv;
 mod common_tree;
 mod bp;
-mod louds;
+mod Louds;
+mod RangeMinMax;
 
 trait BpLoudsCommonTrait {
     fn isleaf (pos:u64) -> bool;
