@@ -192,7 +192,7 @@ impl RangeMinMax{
             if block_index % 2 == 1 {
                 //add L's openings
                 block_index -= 1;                
-                r += (level_ups*self.block_size + self.blockvector[block_index as usize].excess) / 2
+                r += (level_ups*self.block_size + self.blockvector[block_index as usize].unwrap().excess) / 2
             }
             //go level up
             block_index /= 2;
