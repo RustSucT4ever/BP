@@ -5,6 +5,8 @@ use std::cmp;
 
 struct RangeMinMax {
     blockvector: Vec<Option<Block>>,
+    bal_parentheses_vec: BitVec<u8>,
+    block_size:u64
 }
 #[derive(Copy, Clone)]
 struct Block {
@@ -91,6 +93,7 @@ impl RangeMinMax{
         //Alle Blöcke in einen neuen vec speichern und eventuell lückenfüller hinzufügen
 
         let mut range_min_max_tree = Vec::<Option<Block>>::new();
+        range_min_max_tree.push(Option::None);
         let mut pow = 1;
         for i in 0..block_vecs.len(){
             let curr_vec = block_vecs.pop().unwrap();
@@ -107,8 +110,7 @@ impl RangeMinMax{
     //Die Levels wurden nun auf einen einzelnen vektor gepusht, wobei gilt
     //Für alle elternknoten an position i befinden sich die zugehörigen kinder an position i*2 und i*2+1, leere Knoten sind als None gepusht
     
-
-       return RangeMinMax {blockvector: range_min_max_tree};
+       return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses: bp_vec};
     }
         
 }
@@ -122,3 +124,43 @@ impl RangeMinMax{
         return block_right.count_min_ex + block_left.count_min_ex;
 
     }
+/*
+fn calc_excess(tree: RangeMinMax, desired_pos : u32) -> u32{
+
+    let block_pos = desired_pos / tree.block_size;   //abrunden!
+    let last_excess = part_excess(tree, block_pos); //berechnet den excess bis zum ende des letzten blocks.
+    for i in block_pos .. desired_pos {
+        if tree.bal_parentheses_vec[i] == 1{
+            last_excess +=1;
+        }
+        else{
+            last_excess -=1;
+        }
+    }
+    return last_excess;
+
+}
+*/
+/*
+fn part_excess(tree:RangeMinMax, rounded_pos:u32) -> u32{
+    
+    let curr_pos = 1;
+    let curr_scope = Tuple::new(0,tree.bal_parentheses_vec.len());
+    let curr_excess = 0;
+    while curr_pos!= rounded_pos{
+        if curr_scope.snd/2 > rounded_pos{
+            curr_pos = curr_pos * 2;
+            curr_scope.snd = (curr_scope.snd - curr_scope.fst) /2
+        }
+        else if curr_scope-snd/2 < rounded_pos{
+            curr_excess = curr_excess + tree.blockvector[curr_pos*2].of.excess;
+            curr_pos = (curr_pos*2)+1
+            curr_scope.fst = curr_scope.snd / 2;
+        }
+
+        else{
+            curr_pos = curr_pos*2
+        }
+    }
+    return curr_excess; 
+} */
