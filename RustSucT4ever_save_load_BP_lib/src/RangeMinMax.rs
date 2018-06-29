@@ -112,8 +112,68 @@ impl RangeMinMax{
     
        return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses: bp_vec};
     }
-        
+    
+    fn fwdsearch(&self, i:u32, d:u32) -> u32{
+        let k = i/self.block_size;
+        let mut e = 0;
+        for j in i+1..(k*self.block_size) {
+            if self.bal_parentheses_vec.get_bit(j) {
+                e+=1;
+            }else{
+                e-=1;
+            }
+            if  e == d {
+                j
+            }
+        }
+        let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
+        let n = (self.blockvector.len() +1)/2 -1;
+        let mut j = n + k;
+        loop{
+            if j%2 == 1 {
+                j =  (i-1)/2;
+            }else {
+                j = j+1;
+                if self.blockvector[j].unwrap().min_ex<=b && b<= self.blockvector[j].unwrap().max_ex {
+                    break;
+                    //self.step3( j,d)
+                }else{
+                    j = (j-1)/2;
+                    b = b - self.blockvector[j].unwrap().excess;
+                }
+            }
+        }
+
+
+        loop{
+            let n = (self.blockvector.len() +1)/2;
+            let l = self.blockvector.len() - n;
+            if j> l{
+                let mut e = 0;
+                for m in (j-l)*self.block_size .. (j-l)*self.block_size + self.block_size{
+                    if self.bal_parentheses_vec.get_bit(m){
+                        e+=1;
+                    }else{
+                        e-=1;
+                    }
+                    if e==d {
+                        m
+                    }
+                }
+            }else{
+                let left = j*2;
+                let right = j*2 +1;
+                if self.blockvector[left].unwrap().min_ex <= b && b<= self.blockvector[left].unwrap().max_ex {
+                    j = left;
+                }else{
+                    j = right;
+                    b = d-self.bitvector[left].unwrap().excess;
+                }
+            }
+        }
+    }
 }
+ 
  fn calc_count_min_excess(block_left:Block, block_right:Block) ->u32{
         if block_left.min_ex < block_left.excess + block_right.min_ex {
             return block_left.count_min_ex
