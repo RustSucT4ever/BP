@@ -9,11 +9,11 @@ struct RangeMinMax {
     block_size:u64
 }
 #[derive(Copy, Clone)]
-struct Block {
-    excess: u32,
-    min_ex:u32,
-    max_ex:u32,
-    count_min_ex:u32,
+pub struct Block {
+    excess: u64,
+    min_ex:u64,
+    max_ex:u64,
+    count_min_ex:u64,
 }
 
 impl RangeMinMax{
@@ -112,6 +112,66 @@ impl RangeMinMax{
     
        return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
     }
+
+    fn fwdsearch(&self, i:u64, d:u64) -> u64{
+        let k = i/self.block_size;
+        let mut e = 0;
+        for j in i+1..(k*self.block_size) {
+            if self.bal_parentheses_vec.get_bit(j) {
+                e+=1;
+            }else{
+                e-=1;
+            }
+            if  e == d {
+                return j;
+            }
+        }
+        let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
+        let n = (self.blockvector.len() +1)/2 -1;
+        let mut j = n + k as usize;
+        loop{
+            if j%2 == 1 {
+                j =  (i as usize -1)/2;
+            }else {
+                j = j+1;
+                if self.blockvector[j].unwrap().min_ex<=b && b<= self.blockvector[j].unwrap().max_ex {
+                    break;
+                    //self.step3( j,d)
+                }else{
+                    j = (j-1)/2;
+                    b = b - self.blockvector[j].unwrap().excess;
+                }
+            }
+        }
+
+
+        loop{
+            let n = (self.blockvector.len() +1)/2;
+            let l = self.blockvector.len() - n;
+            if j> l{
+                let mut e = 0;
+                for m in (j-l)*(self.block_size as usize) .. (j-l)*(self.block_size as usize) + self.block_size as usize{
+                    if self.bal_parentheses_vec.get_bit(m as u64){
+                        e+=1;
+                    }else{
+                        e-=1;
+                    }
+                    if e==d {
+                        return m as u64;
+                    }
+                }
+            }else{
+                let left = j*2;
+                let right = j*2 +1;
+                if self.blockvector[left].unwrap().min_ex <= b && b<= self.blockvector[left].unwrap().max_ex {
+                    j = left;
+                }else{
+                    j = right;
+                    b = b-self.blockvector[left].unwrap().excess;
+                }
+            }
+        }
+    }
         
     fn rmm_rank_one(&self, i: u64) -> u64 {
         //find the block
@@ -132,7 +192,7 @@ impl RangeMinMax{
             if block_index % 2 == 1 {
                 //add L's openings
                 block_index -= 1;                
-                r += (level_ups*self.block_size + self.bal_parentheses_vec[block_index].excess) / 2
+                r += (level_ups*self.block_size + self.blockvector[block_index as usize].excess) / 2
             }
             //go level up
             block_index /= 2;
@@ -149,7 +209,7 @@ impl RangeMinMax{
     }
 }
 
-    fn calc_count_min_excess(block_left:Block, block_right:Block) ->u32{
+    fn calc_count_min_excess(block_left:Block, block_right:Block) ->u64{
         if block_left.min_ex < block_left.excess + block_right.min_ex {
             return block_left.count_min_ex
         }
