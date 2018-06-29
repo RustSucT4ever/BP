@@ -1,7 +1,7 @@
 extern crate bv;
 extern crate serde;
 extern crate serde_json;
-use common_tree;
+use common_tree::*;
 use bv::{BitVec, Bits};
 use std::fs::File;
 use std::io::prelude::*;
@@ -51,10 +51,18 @@ impl Bp {
     pub fn subtree_size(&self, pos:u64) -> u64 {
         return 1;
     }
+    /*
+    pub fn load_file(file_path: &String) -> String{
+        let mut f = File::open(&file_path).expect("file not found");    
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+        return contents;
+    }
 
     pub fn load_bp(file_path: &String) -> BitVec {
         // datei lesen
-        let contents = load_file(&file_path);
+        let mut contents = load_file(&file_path);
         // deserialisieren
         let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
         // überprüfen ob das geladene auch ein BP ist
@@ -111,14 +119,7 @@ impl Bp {
         }
         return display.to_string();
     }
-
-    fn load_file(file_path: &String) -> String{
-        let mut f = File::open(&file_path).expect("file not found");    
-        let mut contents = String::new();
-        f.read_to_string(&mut contents)
-            .expect("something went wrong reading the file");
-        return contents;
-    }
+    */
 }
 
 #[cfg(test)]
@@ -129,72 +130,72 @@ mod tests {
     #[test]
     fn test_pre_rank(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(pre_rank(0), 1);
-        assert_eq!(pre_rank(1), 2);
-        assert_eq!(pre_rank(2), 2);
-        assert_eq!(pre_rank(3), 3);
-        assert_eq!(pre_rank(4), 3);
-        assert_eq!(pre_rank(5), 3);
-        assert_eq!(pre_rank(6), 3);
+        assert_eq!(test_tree.pre_rank(0), 1);
+        assert_eq!(test_tree.pre_rank(1), 2);
+        assert_eq!(test_tree.pre_rank(2), 2);
+        assert_eq!(test_tree.pre_rank(3), 3);
+        assert_eq!(test_tree.pre_rank(4), 3);
+        assert_eq!(test_tree.pre_rank(5), 3);
+        assert_eq!(test_tree.pre_rank(6), 3);
     }
 
     #[test]
     fn test_pre_select(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(pre_select(1), 0);
-        assert_eq!(pre_select(2), 1);
-        assert_eq!(pre_select(3), 3);
+        assert_eq!(test_tree.pre_select(1), 0);
+        assert_eq!(test_tree.pre_select(2), 1);
+        assert_eq!(test_tree.pre_select(3), 3);
     }
 
     #[test]
     fn test_ancestor(){
         let test_tree : BitVec = create_test_tree();
-        assert!(ancestor(0,3));
-        assert!(ancestor(0,1));
-        assert!(!ancestor(1,3));
+        assert!(test_tree.ancestor(0,3));
+        assert!(test_tree.ancestor(0,1));
+        assert!(!test_tree.ancestor(1,3));
     }
 
     #[test]
     fn test_subtree_size(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(subtree_size(0), 3);
-        assert_eq!(subtree_size(1), 1);
-        assert_eq!(subtree_size(3), 1);
+        assert_eq!(test_tree.subtree_size(0), 3);
+        assert_eq!(test_tree.subtree_size(1), 1);
+        assert_eq!(test_tree.subtree_size(3), 1);
     }
 
     #[test]
     fn test_depth(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(depth(0), 1);
-        assert_eq!(depth(1), 2);
-        assert_eq!(depth(3), 3);
+        assert_eq!(test_tree.depth(0), 1);
+        assert_eq!(test_tree.depth(1), 2);
+        assert_eq!(test_tree.depth(3), 3);
     }
 
     #[test]
     fn test_isleaf(){
         let test_tree : BitVec = create_test_tree();
-        assert!(!isleaf(0));
-        assert!(isleaf(1));
-        assert!(isleaf(3));
+        assert!(test_tree.!isleaf(0));
+        assert!(test_tree.isleaf(1));
+        assert!(test_tree.isleaf(3));
     }
 
     #[test]
     fn test_parent(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(parent(1), 0);
-        assert_eq!(parent(3), 0);
+        assert_eq!(test_tree.parent(1), 0);
+        assert_eq!(test_tree.parent(3), 0);
     }
 
     #[test]
     fn test_first_child(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(first_child(0), 1);
+        assert_eq!(test_tree.first_child(0), 1);
     }
 
     #[test]
     fn test_next_sibling(){
         let test_tree : BitVec = create_test_tree();
-        assert_eq!(next_sibling(1), 3);
+        assert_eq!(test_tree.next_sibling(1), 3);
     }
 
     fn create_test_tree() -> Bp {
