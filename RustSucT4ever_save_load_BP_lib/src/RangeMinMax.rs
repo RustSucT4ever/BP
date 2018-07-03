@@ -31,16 +31,19 @@ impl RangeMinMax{
         let mut e = 0;
         let mut M = 0;
         let mut n = 0;
+        println!("Vector length {}", length);
         let mut blocks = Vec::<Block>::new();
         println!("checkpoint 1");
         for i in 0 .. length {
             if i%block_size == 0 {
+                
                 if i!=0 {
                     //Louds {bitString: bits, dataStruct: dataStruct}
                     let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
                     blocks.push(b);
+                    println!("Block pushed!");
                 }
-                blocks = Vec::<Block>::new();
+                //blocks = Vec::<Block>::new();
                 m = 0;
                 e = 0;
                 M = 0;
@@ -71,7 +74,9 @@ impl RangeMinMax{
         //End of collecting the leafs. At this point the Blocks of the leafs are in a vector that is inside of block_vecs
 
         let mut last_elem_size = blocks.len();
+        println!("Blocks collected {}", blocks.len());
         let mut current_vec =  blocks;
+        
         while last_elem_size>1 {
             let mut generate_vec = Vec::<Block> ::new();
             let mut block1=current_vec[0].clone();
@@ -106,6 +111,7 @@ impl RangeMinMax{
         let mut range_min_max_tree = Vec::<Option<Block>>::new();
         range_min_max_tree.push(Option::None);
         let mut pow = 1;
+        //println!("Anzahl an levels {}", block_vecs.len());
         for i in 0..block_vecs.len(){
             let curr_vec = block_vecs.pop().unwrap();
             for j in 0..pow{
@@ -291,6 +297,7 @@ pub fn save_tree_as_file(tree: RangeMinMax) -> String{
         let mut string_repr="".to_owned();
         let mut i=1;
         let mut pow = 2;
+        println!("{}", tree.blockvector.len());
         while i<tree.blockvector.len(){
             if tree.blockvector[i].is_none(){
                 string_repr.push_str("[NONE]");
