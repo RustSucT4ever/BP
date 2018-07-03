@@ -42,7 +42,7 @@ impl RangeMinMax{
                     let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
                     blocks.push(b);
                 }
-                m = 0;
+                m = block_size as i64;
                 e = 0;
                 M = 0;
                 n = 0;
