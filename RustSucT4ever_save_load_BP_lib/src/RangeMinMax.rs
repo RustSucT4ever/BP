@@ -17,10 +17,10 @@ pub struct RangeMinMax {
 }
 #[derive(Copy, Clone)]
 pub struct Block {
-    excess: u64,
-    min_ex:u64,
-    max_ex:u64,
-    count_min_ex:u64,
+    excess: i64,
+    min_ex:i64,
+    max_ex:i64,
+    count_min_ex:i64,
 }
 
 impl RangeMinMax{
@@ -222,7 +222,7 @@ impl RangeMinMax{
     */
 }
 
-    fn calc_count_min_excess(block_left:Block, block_right:Block) ->u64{
+    fn calc_count_min_excess(block_left:Block, block_right:Block) ->i64{
         if block_left.min_ex < block_left.excess + block_right.min_ex {
             return block_left.count_min_ex
         }
