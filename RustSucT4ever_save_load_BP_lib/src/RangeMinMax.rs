@@ -41,9 +41,7 @@ impl RangeMinMax{
                     //Louds {bitString: bits, dataStruct: dataStruct}
                     let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
                     blocks.push(b);
-                    println!("Block pushed!");
                 }
-                //blocks = Vec::<Block>::new();
                 m = 0;
                 e = 0;
                 M = 0;
