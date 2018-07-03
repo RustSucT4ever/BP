@@ -80,7 +80,7 @@ mod tests {
 
         println!("test running ----r------------");
         let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
-     //   RangeMinMax::save_tree_as_file(test_tree);
+        RangeMinMax::save_tree_as_file(test_tree);
      //  assert_eq!(true, true);
     }
 }
