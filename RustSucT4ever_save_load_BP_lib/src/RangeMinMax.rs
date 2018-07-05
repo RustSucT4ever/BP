@@ -10,29 +10,32 @@ struct RangeMinMax {
 }
 #[derive(Copy, Clone)]
 pub struct Block {
-    excess: u64,
-    min_ex:u64,
-    max_ex:u64,
-    count_min_ex:u64,
+    excess: i64,
+    min_ex:i64,
+    max_ex:i64,
+    count_min_ex:i64,
 }
 
 impl RangeMinMax{
     pub fn new (bp_vec:BitVec<u8>, block_size: u64) -> RangeMinMax{
+        println!("checkpoint 1");
         let mut m = 0;
         let length = bp_vec.len();
         let mut e = 0;
         let mut M = 0;
         let mut n = 0;
+        println!("Vector length {}", length);
         let mut blocks = Vec::<Block>::new();
+        println!("checkpoint 1");
         for i in 0 .. length {
             if i%block_size == 0 {
+                
                 if i!=0 {
                     //Louds {bitString: bits, dataStruct: dataStruct}
                     let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
                     blocks.push(b);
                 }
-                blocks = Vec::<Block>::new();
-                m = 0;
+                m = block_size as i64;
                 e = 0;
                 M = 0;
                 n = 0;
@@ -53,6 +56,7 @@ impl RangeMinMax{
                 n+=1;
             }
         }
+        println!("checkpoint 1");
         let b =  Block{excess:e, min_ex:m, max_ex:M, count_min_ex:n};
         blocks.push(b);
         let mut block_vecs = Vec::<Vec<Block>>::new();
@@ -61,7 +65,9 @@ impl RangeMinMax{
         //End of collecting the leafs. At this point the Blocks of the leafs are in a vector that is inside of block_vecs
 
         let mut last_elem_size = blocks.len();
+        println!("Blocks collected {}", blocks.len());
         let mut current_vec =  blocks;
+        
         while last_elem_size>1 {
             let mut generate_vec = Vec::<Block> ::new();
             let mut block1=current_vec[0].clone();
@@ -89,12 +95,14 @@ impl RangeMinMax{
         }
         //Nun wurden die Elternknoten erstellt und in levelweise in block_vecs gepusht, wobei der Wurzelknoten ganz links steht.
 
+        println!("checkpoint 1");
 
         //Alle Blöcke in einen neuen vec speichern und eventuell lückenfüller hinzufügen
 
         let mut range_min_max_tree = Vec::<Option<Block>>::new();
         range_min_max_tree.push(Option::None);
         let mut pow = 1;
+        //println!("Anzahl an levels {}", block_vecs.len());
         for i in 0..block_vecs.len(){
             let curr_vec = block_vecs.pop().unwrap();
             for j in 0..pow{
@@ -107,16 +115,16 @@ impl RangeMinMax{
             }
             pow = pow * 2;
         }
-    //Die Levels wurden nun auf einen einzelnen vektor gepusht, wobei gilt
-    //Für alle elternknoten an position i befinden sich die zugehörigen kinder an position i*2 und i*2+1, leere Knoten sind als None gepusht
+        //Die Levels wurden nun auf einen einzelnen vektor gepusht, wobei gilt
+        //Für alle elternknoten an position i befinden sich die zugehörigen kinder an position i*2 und i*2+1, leere Knoten sind als None gepusht
     
-       return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
+        return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
     }
 
-    fn fwdsearch(&self, i:u64, d:u64) -> u64{
+    fn fwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size;
         let mut e = 0;
-        for j in i+1..(k*self.block_size) {
+        for j in i+1..((k+1)*self.block_size) {
             if self.bal_parentheses_vec.get_bit(j) {
                 e+=1;
             }else{
@@ -127,11 +135,11 @@ impl RangeMinMax{
             }
         }
         let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
-        let n = (self.blockvector.len() +1)/2 -1;
-        let mut j = n + k as usize;
+        //let mut j = (self.blockvector.len()+1)/2 + k as usize; wenn bockvec nicht um eins zu groß
+        let mut j = (self.blockvector.len())/2 + k as usize;
         loop{
             if j%2 == 1 {
-                j =  (i as usize -1)/2;
+                j =  (j as usize -1)/2;
             }else {
                 j = j+1;
                 if self.blockvector[j].unwrap().min_ex<=b && b<= self.blockvector[j].unwrap().max_ex {
@@ -146,11 +154,11 @@ impl RangeMinMax{
 
 
         loop{
-            let n = (self.blockvector.len() +1)/2;
-            let l = self.blockvector.len() - n;
+            let n = (self.blockvector.len())/2;  //(self.blockvector.len()+1)/2 ohne extra block
+            let l = n-1;  // n-2 ohne block
             if j> l{
                 let mut e = 0;
-                for m in (j-l)*(self.block_size as usize) .. (j-l)*(self.block_size as usize) + self.block_size as usize{
+                for m in (j-l-1)*(self.block_size as usize) .. (j-l-1)*(self.block_size as usize) + self.block_size as usize{
                     if self.bal_parentheses_vec.get_bit(m as u64){
                         e+=1;
                     }else{
@@ -172,6 +180,82 @@ impl RangeMinMax{
             }
         }
     }
+
+    fn bwdsearch(&self, i:u64, d:i64) -> u64{
+        let k = i/self.block_size; 
+        let mut e = 0;
+        /*
+        for j in i+1..((k+1)*self.block_size) {
+            if self.bal_parentheses_vec.get_bit(j) {
+                e+=1;
+            }else{
+                e-=1;
+            }
+            if  e == b {
+                return j;
+            }
+        }
+        */
+        let mut s = i;
+        while s> k*self.block_size {
+            if self.bal_parentheses_vec.get_bit(s) {
+                e-=1;
+            }else{
+                e+=1;
+            }
+            if  e == d {
+                return s-1;
+            }
+            s-=1;
+        }
+        let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
+        let n = (self.blockvector.len() +1)/2; //weil unser k um eins kleiner als das im paper
+        let mut j = n + k as usize;
+        loop{
+            if j%2 == 0 {
+                j =  (j as usize)/2;
+            }else {
+                j = j-1;
+                if self.blockvector[j].unwrap().min_ex<=b && b<= self.blockvector[j].unwrap().max_ex {
+                    break;
+                    //self.step3( j,d)
+                }else{
+                    j = j/2;
+                    b = b - self.blockvector[j].unwrap().excess;
+                }
+            }
+        }
+
+
+        loop{
+            let n = (self.blockvector.len())/2;  //(self.blockvector.len()+1)/2 ohne extra block
+            let l = n-1;  // n-2 ohne block
+            //let l = (self.blockvector.len())/2;
+            if j>=l{
+                let mut e = 0;
+                for m in (j-1-l)*(self.block_size as usize) .. (j-1-l)*(self.block_size as usize) + self.block_size as usize{
+                    if self.bal_parentheses_vec.get_bit(m as u64){
+                        e+=1;
+                    }else{
+                        e-=1;
+                    }
+                    if e==b {
+                        return m as u64;
+                    }
+                }
+            }else{
+                let left = j*2;
+                let right = j*2 +1;
+                if self.blockvector[left].unwrap().min_ex <= b && b<= self.blockvector[left].unwrap().max_ex {
+                    j = left;
+                }else{
+                    j = right;
+                    b = b-self.blockvector[left].unwrap().excess;
+                }
+            }
+        }
+    }
+
         
     fn rmm_rank_one(&self, i: u64) -> u64 {
         //find the block
@@ -209,7 +293,7 @@ impl RangeMinMax{
     }
 }
 
-    fn calc_count_min_excess(block_left:Block, block_right:Block) ->u64{
+    fn calc_count_min_excess(block_left:Block, block_right:Block) ->i64{
         if block_left.min_ex < block_left.excess + block_right.min_ex {
             return block_left.count_min_ex
         }
