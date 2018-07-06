@@ -11,7 +11,7 @@ use std::path::Path;
 struct Bp {
     bitString: BitVec<u8>,
 }
-
+/*
 impl BpLoudsCommonTrait for Bp {
     fn isleaf (&self, pos:u64) -> bool{
         return false
@@ -51,7 +51,7 @@ impl Bp {
     pub fn subtree_size(&self, pos:u64) -> u64 {
         return 1;
     }
-    /*
+    
     pub fn load_file(file_path: &String) -> String{
         let mut f = File::open(&file_path).expect("file not found");    
         let mut contents = String::new();
@@ -119,9 +119,10 @@ impl Bp {
         }
         return display.to_string();
     }
-    */
+    
 }
-
+*/
+/*
 #[cfg(test)]
 mod tests {
     use bv::{BitVec, Bits};
@@ -210,3 +211,4 @@ mod tests {
         return bp_example;
     }
 }
+*/

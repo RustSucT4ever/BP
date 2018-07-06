@@ -2,8 +2,15 @@ extern crate bv;
 use std::vec::Vec;
 use bv::{BitVec, Bits};
 use std::cmp;
+use std::fs::File;
+use std::path::Path;
 
-struct RangeMinMax {
+use std::io::prelude::*;
+use std::error::Error;
+
+
+
+pub struct RangeMinMax {
     blockvector: Vec<Option<Block>>,
     bal_parentheses_vec: BitVec<u8>,
     block_size:u64
@@ -120,7 +127,7 @@ impl RangeMinMax{
     
         return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
     }
-
+/*
     fn fwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size;
         let mut e = 0;
@@ -291,6 +298,7 @@ impl RangeMinMax{
     fn rmm_rank_zero(&self, i: u64) -> u64 {
         return i - self.rmm_rank_one(i);
     }
+    */
 }
 
     fn calc_count_min_excess(block_left:Block, block_right:Block) ->i64{
@@ -344,3 +352,67 @@ fn part_excess(tree:RangeMinMax, rounded_pos:u32) -> u32{
     }
     return curr_excess; 
 } */
+
+
+pub fn save_tree_as_file(tree: RangeMinMax) -> String{
+    let path = Path::new("Range_min_max.txt");
+        let display = path.display();
+
+        // Open a file in write-only mode, returns `io::Result<File>`
+        let mut file = match File::create(&path) {
+            Err(why) => panic!("couldn't create {}: {}",
+                            display,
+                            why.description()),
+            Ok(file) => file,
+        };
+        
+        println!("file saved ----------------");
+        let mut string_repr="".to_owned();
+        let mut i=1;
+        let mut pow = 2;
+        println!("{}", tree.blockvector.len());
+        while i<tree.blockvector.len(){
+            if tree.blockvector[i].is_none(){
+                string_repr.push_str("[NONE]");
+            }
+            else{
+            string_repr.push_str("[excess: ");
+            string_repr.push_str(&tree.blockvector[i].unwrap().excess.to_string());
+            string_repr.push_str("min excess: ");
+            string_repr.push_str(&tree.blockvector[i].unwrap().min_ex.to_string());
+            string_repr.push_str("max excess: ");
+            string_repr.push_str(&tree.blockvector[i].unwrap().max_ex.to_string());
+            string_repr.push_str("#min excess: ");
+            string_repr.push_str(&tree.blockvector[i].unwrap().count_min_ex.to_string());
+            string_repr.push_str("]");
+            }
+            if i==pow-1 {
+                string_repr.push_str("\n");
+                pow = pow*2
+            }
+            i=i+1;
+
+        }
+
+        string_repr.push_str("\n [");
+
+        for i in 0 .. tree.bal_parentheses_vec.len(){
+            if i!=0 && (i%tree.block_size)==0{
+                string_repr.push_str("|");
+            }
+        string_repr.push_str(&tree.bal_parentheses_vec[i].to_string());
+        }
+        string_repr.push_str("]");
+        
+
+
+            // datei speichern
+        match file.write_all(string_repr.as_bytes()) {
+            Err(why) => {
+                panic!("couldn't write to {}: {}", display,
+                                                why.description())
+            },
+            Ok(_) => println!("successfully wrote to {}", display),
+        }
+        return display.to_string();
+}
