@@ -271,7 +271,7 @@ impl RangeMinMax{
     }
 
         
-    fn rmm_rank_one(&self, i: u64) -> u64 {
+    pub fn rmm_rank_one(&self, i: u64) -> u64 {
         //find the block
         let block_vec_index: u64 = i / self.block_size;
         let block_vec_start: u64 = block_vec_index * self.block_size;
@@ -279,7 +279,7 @@ impl RangeMinMax{
 
         // count r
         let mut r: u64 = 0;
-        for k in block_vec_start..i{
+        for k in block_vec_start..i+1{
             if self.bal_parentheses_vec.get_bit(k) {
                 r+=1;
             }
@@ -302,8 +302,8 @@ impl RangeMinMax{
         }   
     
 
-    fn rmm_rank_zero(&self, i: u64) -> u64 {
-        return i - self.rmm_rank_one(i);
+    pub fn rmm_rank_zero(&self, i: u64) -> u64 {
+        return (i+1) - self.rmm_rank_one(i);
     }
 
     fn rmm_select_one(&self, i: u64) -> u64 {

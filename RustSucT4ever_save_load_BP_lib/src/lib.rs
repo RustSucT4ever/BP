@@ -50,6 +50,85 @@ mod tests {
 mod tests {
     use RangeMinMax;
     use bv::{BitVec};
+
+    #[test]
+    fn test_rank_0(){
+        let mut example = BitVec::<u8>::new();
+        example.push(true);
+        example.push(true);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+        
+        example.push(true);
+        example.push(false);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+
+        example.push(false);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+        
+        example.push(false);
+        example.push(false);
+        example.push(false);
+
+        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+         let result = test_tree.rmm_rank_zero(12);
+         assert_eq!(result, 5);
+    }
+    #[test]
+    fn test_rank_1(){
+        let mut example = BitVec::<u8>::new();
+        example.push(true);
+        example.push(true);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+        
+        example.push(true);
+        example.push(false);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+
+        example.push(false);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+        
+        example.push(false);
+        example.push(false);
+        example.push(false);
+
+        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+         let result = test_tree.rmm_rank_one(7);
+         assert_eq!(result, 5);
+    }
+
+
+
+
     #[test]
     fn test_fwd_search(){
         let mut example = BitVec::<u8>::new();
