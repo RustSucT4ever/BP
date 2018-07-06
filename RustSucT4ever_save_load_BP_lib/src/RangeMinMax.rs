@@ -127,7 +127,7 @@ impl RangeMinMax{
     
         return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
     }
-/*
+
     fn fwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size;
         let mut e = 0;
@@ -141,7 +141,7 @@ impl RangeMinMax{
                 return j;
             }
         }
-        let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
+        let mut b = e;
         //let mut j = (self.blockvector.len()+1)/2 + k as usize; wenn bockvec nicht um eins zu groß
         let mut j = (self.blockvector.len())/2 + k as usize;
         loop{
@@ -215,7 +215,7 @@ impl RangeMinMax{
             }
             s-=1;
         }
-        let mut b = d-(self.excess(k*self.block_size)-self.excess(i));
+        let mut b = e;
         let n = (self.blockvector.len() +1)/2; //weil unser k um eins kleiner als das im paper
         let mut j = n + k as usize;
         loop{
@@ -228,7 +228,7 @@ impl RangeMinMax{
                     //self.step3( j,d)
                 }else{
                     j = j/2;
-                    b = b - self.blockvector[j].unwrap().excess;
+                    b = b + self.blockvector[j].unwrap().excess;
                 }
             }
         }
@@ -257,7 +257,7 @@ impl RangeMinMax{
                     j = left;
                 }else{
                     j = right;
-                    b = b-self.blockvector[left].unwrap().excess;
+                    b = b+self.blockvector[left].unwrap().excess;
                 }
             }
         }
@@ -298,7 +298,7 @@ impl RangeMinMax{
     fn rmm_rank_zero(&self, i: u64) -> u64 {
         return i - self.rmm_rank_one(i);
     }
-    */
+    
 }
 
     fn calc_count_min_excess(block_left:Block, block_right:Block) ->i64{
