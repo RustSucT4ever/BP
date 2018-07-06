@@ -142,10 +142,12 @@ impl RangeMinMax{
                 return j;
             }
         }
-        let mut b = e;
+        //println!("d is {}", d);
+        let mut b = d - e;
+        //println!("d is {}", b);
         //let mut j = (self.blockvector.len()+1)/2 + k as usize; wenn bockvec nicht um eins zu groß
         let mut j = (self.blockvector.len())/2 + k as usize;
-        println!("Start is {}", j);
+        //println!("Start is {}", j);
         loop{
             if j%2 == 1 {
                 j =  (j as usize -1)/2;
@@ -155,13 +157,15 @@ impl RangeMinMax{
                     break;
                     //self.step3( j,d)
                 }else{
-                    j = (j-1)/2;
                     b = b - self.blockvector[j].unwrap().excess;
+                    j = (j-1)/2;
                 }
             }
         }
 
-        println!("Node is {}", j);
+
+
+        //println!("Node is {}", j);
 
         loop{
             let n = (self.blockvector.len())/2;  //(self.blockvector.len()+1)/2 ohne extra block
@@ -218,7 +222,7 @@ impl RangeMinMax{
             }
             s-=1;
         }
-        let mut b = e;
+        let mut b = d + e;
         let n = (self.blockvector.len() +1)/2; //weil unser k um eins kleiner als das im paper
         let mut j = n + k as usize;
         loop{
@@ -230,8 +234,8 @@ impl RangeMinMax{
                     break;
                     //self.step3( j,d)
                 }else{
-                    j = j/2;
                     b = b + self.blockvector[j].unwrap().excess;
+                    j = j/2;
                 }
             }
         }
