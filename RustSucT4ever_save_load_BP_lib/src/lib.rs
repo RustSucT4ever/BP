@@ -171,6 +171,48 @@ mod tests {
         assert_eq!(result_index, 9);
     }
     #[test]
+    fn test_bwd_search(){
+        let mut example = BitVec::<u8>::new();
+        println!("test running ----------------");
+        example.push(true);
+        example.push(true);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+        
+        example.push(true);
+        example.push(false);
+        example.push(false);
+        example.push(true);
+
+        example.push(false);
+        example.push(false);
+        example.push(true);
+        example.push(true);
+
+        example.push(false);
+        example.push(true);
+        example.push(false);
+        example.push(true);
+        
+        example.push(false);
+        example.push(false);
+        example.push(false);
+
+        println!("test running ----r------------");
+        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+        let result_index = test_tree.fwdsearch(17, -1);
+        println!("result: {} ",result_index );
+        println!("expected: 13");
+        assert_eq!(result_index, 13);
+    }
+
+    #[test]
     fn save_the_tree() {
         // create an example BV tree
         let mut example = BitVec::<u8>::new();
