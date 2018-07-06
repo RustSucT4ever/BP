@@ -31,17 +31,17 @@ impl Louds {
             }
         }
     }
-    pub fn new(bits: BitVec<u8>) -> Louds{
+    pub fn new(bits: BitVec<u8>, k: usize) -> Louds{
         let n = bits.bit_len();
         let b = n as f64;
         let mut bit = BitVec::new();
         for i in 0..n {
             bit.push(bits.get_bit(i));
         }
-        let k = 2; //change this to the optimal k size like following, but without division by 0:
+        //let k = 2; //change this to the optimal k size like following, but without division by 0:
         //let k = b.ln().powi(2) /(32 as f64);
         // k = (log n)² / 32 
-        let dataStruct = RankSelect::new(bit, k as usize);
+        let dataStruct = RankSelect::new(bit, k);
         Louds {bitString: bits, dataStruct: dataStruct}
     }
     fn next_0(&self, x: u64) -> u64{
@@ -137,7 +137,7 @@ mod tests {
             louds_tree.push(true);
             louds_tree.push(false);
             louds_tree.push(false);
-        let louds_example = Louds::new(louds_tree);
+        let louds_example = Louds::new(louds_tree, 2);
         return louds_example;
     }
 }
