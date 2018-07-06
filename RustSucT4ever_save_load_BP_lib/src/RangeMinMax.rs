@@ -271,7 +271,7 @@ impl RangeMinMax{
         let mut block_index: u64 = (self.blockvector.len()/2 + (block_vec_index as usize)) as u64;
 
         // count r
-        let r: u64 = 0;
+        let mut r: u64 = 0;
         for k in block_vec_start..i{
             if self.bal_parentheses_vec.get_bit(k) {
                 r+=1;
@@ -283,7 +283,7 @@ impl RangeMinMax{
             if block_index % 2 == 1 {
                 //add L's openings
                 block_index -= 1;                
-                r += (level_ups*self.block_size + self.blockvector[block_index as usize].unwrap().excess) / 2
+                r += (level_ups*self.block_size + (self.blockvector[block_index as usize].unwrap().excess as u64)) / 2
             }
             //go level up
             block_index /= 2;
@@ -297,6 +297,69 @@ impl RangeMinMax{
 
     fn rmm_rank_zero(&self, i: u64) -> u64 {
         return i - self.rmm_rank_one(i);
+    }
+
+    fn rmm_select_one(&self, i: u64) -> u64 {
+        let mut k = i;
+        let mut block_vec_index = 1;
+        let mut block_length = self.bal_parentheses_vec.len();
+        let mut result = 0;
+        // if isLeaf 
+        while (block_vec_index < self.blockvector.len()/2) {
+            // elseif Vlc.1 > k return Vlc.select1k
+            let left_child_openings = (block_length + (self.blockvector[block_vec_index as usize].unwrap().excess as u64)) / 2;
+            if (left_child_openings >= k) {
+                block_vec_index *= 2;
+            }
+            // else return |Vlc| + Vrc.select1(k-Vlc.1)
+            else {
+                block_length /= 2;
+                result += block_length;
+                k -= left_child_openings;
+                block_vec_index = block_vec_index*2 + 1;
+            }
+        }
+        // return k-te oeffnende
+        let mut bit_index: u64 = (block_vec_index * (self.block_size as usize)) as u64;
+        while (k>0) {
+            if self.bal_parentheses_vec.get_bit(bit_index) {
+                bit_index += 1;
+                k -= 1;
+            }
+        }        
+        return result;
+    }
+
+    fn rmm_select_zero(&self, i: u64) -> u64 {
+        let mut k = i;
+        let mut block_vec_index = 1;
+        let mut block_length = self.bal_parentheses_vec.len();
+        let mut result = 0;
+        // if isLeaf 
+        while (block_vec_index < self.blockvector.len()/2) {
+            block_length /= 2;
+            // elseif |Vlc| Vlc.1 > k return Vlc.select0k
+            let left_child_openings = (block_length + (self.blockvector[block_vec_index as usize].unwrap().excess as u64)) / 2;
+            let left_child_closings = block_length - left_child_openings;
+            if (left_child_closings >= k) {
+                block_vec_index *= 2;
+            }
+            // else return |Vlc| + Vrc.select0(k- (|Vlc| - Vlc.1))
+            else {
+                result += block_length;
+                k -= left_child_closings;
+                block_vec_index = block_vec_index*2 + 1;
+            }
+        }
+        // return k-te schließende
+        let mut bit_index: u64 = (block_vec_index * (self.block_size as usize)) as u64;
+        while (k>0) {
+            if !self.bal_parentheses_vec.get_bit(bit_index) {
+                bit_index += 1;
+                k -= 1;
+            }
+        }        
+        return result;
     }
     
 }
