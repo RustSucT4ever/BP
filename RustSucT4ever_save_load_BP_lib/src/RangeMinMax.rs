@@ -195,7 +195,7 @@ impl RangeMinMax{
         }
     }
 
-    pub fn bwdsearch(&self, i:u64, d:i64) -> u64{
+   pub fn bwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size; 
         let mut e = 0;
         /*
@@ -222,39 +222,40 @@ impl RangeMinMax{
             }
             s-=1;
         }
-        /*
+        
         if self.bal_parentheses_vec.get_bit(s){
             e-=1
         }else{
             e+=1;
         }
-        */
-        //println!("e is {}", e);
-        let mut b = d + e;
+        
+        println!("e is {}", e);
+        let mut b = d + e ;
+        println!("d is {}", b);
         let n = (self.blockvector.len())/2; //weil unser k um eins kleiner als das im paper
         let mut j = n + k as usize;
-        //println!("Step 1 is done");
-        //println!("Starts at Node {}", j);
+        println!("Step 1 is done");
+        println!("Starts at Node {}", j);
         loop{
             if j%2 == 0 {
                 j =  (j as usize)/2;
-                //println!("Going to {} and d is {}",j, b );
+                println!("Going to {} and d is {}",j, b );
             }else {
                 j = j-1;
                 //println!("Going to {} and d is {}",j, b );
                 if self.blockvector[j].unwrap().min_ex-self.blockvector[j].unwrap().excess<=b && b<= self.blockvector[j].unwrap().max_ex -self.blockvector[j].unwrap().excess {
-                    //println!("Going to {} and d is {}",j, b );
                     b = b + self.blockvector[j].unwrap().excess;
+                    println!("Going to {} and d is {}",j, b );
                     break;
                     //self.step3( j,d)
                 }else{
                     //b = b + self.blockvector[j].unwrap().excess;
                     j = j/2;
-                    //println!("Going to {} and d is {}",j, b );
+                    println!("Going to {} and d is {}",j, b );
                 }
             }
         }
-        //println!("Step 2 is done");
+        println!("Step 2 is done");
 
         loop{
             let n = (self.blockvector.len())/2;  //(self.blockvector.len()+1)/2 ohne extra block
@@ -278,11 +279,11 @@ impl RangeMinMax{
                 if self.blockvector[right].unwrap().min_ex <=  b-self.blockvector[left].unwrap().excess && b - self.blockvector[left].unwrap().excess<= self.blockvector[right].unwrap().max_ex{
                     j = right;
                     b = b-self.blockvector[left].unwrap().excess;
-                    //println!("Going to {} and d is {}",j, b );
+                    println!("Going to {} and d is {}",j, b );
                 }else{
                     j = left;
                     //b = b-self.blockvector[left].unwrap().excess;
-                    //println!("Going to {} and d is {}",j, b );
+                    println!("Going to {} and d is {}",j, b );
                 }
             }
         }
