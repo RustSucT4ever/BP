@@ -230,7 +230,7 @@ impl RangeMinMax{
         }
         
         println!("e is {}", e);
-        let mut b = d + e ;
+        let mut b = d - e ;
         println!("d is {}", b);
         let n = (self.blockvector.len())/2; //weil unser k um eins kleiner als das im paper
         let mut j = n + k as usize;
@@ -276,7 +276,8 @@ impl RangeMinMax{
             }else{
                 let left = j*2;
                 let right = j*2 +1;
-                if self.blockvector[right].unwrap().min_ex <=  b-self.blockvector[left].unwrap().excess && b - self.blockvector[left].unwrap().excess<= self.blockvector[right].unwrap().max_ex{
+                let pot_new_b = b-self.blockvector[left].unwrap().excess;
+                if self.blockvector[right].unwrap().min_ex <=  pot_new_b && pot_new_b <= self.blockvector[right].unwrap().max_ex{
                     j = right;
                     b = b-self.blockvector[left].unwrap().excess;
                     println!("Going to {} and d is {}",j, b );
