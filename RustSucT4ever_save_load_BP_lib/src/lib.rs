@@ -206,10 +206,12 @@ mod tests {
 
         println!("test running ----r------------");
         let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
-        let result_index = test_tree.fwdsearch(17, -1);
+        let result_index = test_tree.bwdsearch(4, -2);
         println!("result: {} ",result_index );
-        println!("expected: 13");
-        assert_eq!(result_index, 13);
+        println!("expected: 0");
+        assert_eq!(result_index, 0);
+        assert_eq!(test_tree.bwdsearch(17, -1), 14);
+        assert_eq!(test_tree.bwdsearch(23, 3), 20);
     }
 
     #[test]
