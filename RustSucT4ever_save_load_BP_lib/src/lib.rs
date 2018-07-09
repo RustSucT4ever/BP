@@ -101,6 +101,23 @@ mod tests {
     }
 
     #[test]
+    fn test_select_zero(){
+        let test_tree = create_rmm_test_tree();
+        assert_eq!(test_tree.rmm_select_zero(1), 3);
+        assert_eq!(test_tree.rmm_select_zero(2), 5);
+        assert_eq!(test_tree.rmm_select_zero(3), 6);
+        assert_eq!(test_tree.rmm_select_zero(4), 10);
+        assert_eq!(test_tree.rmm_select_zero(5), 11);
+        assert_eq!(test_tree.rmm_select_zero(6), 13);
+        assert_eq!(test_tree.rmm_select_zero(7), 14);
+        assert_eq!(test_tree.rmm_select_zero(8), 17);
+        assert_eq!(test_tree.rmm_select_zero(9), 19);
+        assert_eq!(test_tree.rmm_select_zero(10), 21);
+        assert_eq!(test_tree.rmm_select_zero(11), 22);
+        assert_eq!(test_tree.rmm_select_zero(12), 23);
+    }
+
+    #[test]
     fn save_the_tree() {
         let test_tree = create_rmm_test_tree();
         RangeMinMax::save_tree_as_file(test_tree);
