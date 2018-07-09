@@ -53,118 +53,20 @@ mod tests {
 
     #[test]
     fn test_rank_0(){
-        let mut example = BitVec::<u8>::new();
-        example.push(true);
-        example.push(true);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-        
-        example.push(true);
-        example.push(false);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-
-        example.push(false);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-        
-        example.push(false);
-        example.push(false);
-        example.push(false);
-
-        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
-         let result = test_tree.rmm_rank_zero(12);
-         assert_eq!(result, 5);
+        let test_tree = create_rmm_test_tree();
+        let result = test_tree.rmm_rank_zero(12);
+        assert_eq!(result, 5);
     }
     #[test]
     fn test_rank_1(){
-        let mut example = BitVec::<u8>::new();
-        example.push(true);
-        example.push(true);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-        
-        example.push(true);
-        example.push(false);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-
-        example.push(false);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-        
-        example.push(false);
-        example.push(false);
-        example.push(false);
-
-        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+        let test_tree = create_rmm_test_tree();
          let result = test_tree.rmm_rank_one(7);
          assert_eq!(result, 5);
     }
 
-
-
-
     #[test]
     fn test_fwd_search(){
-        let mut example = BitVec::<u8>::new();
-        println!("test running ----------------");
-        example.push(true);
-        example.push(true);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-        
-        example.push(true);
-        example.push(false);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-
-        example.push(false);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-        
-        example.push(false);
-        example.push(false);
-        example.push(false);
-
-        println!("test running ----r------------");
-        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+        let test_tree = create_rmm_test_tree();
         let result_index = test_tree.fwdsearch(2, 1);
         println!("result: {} ",result_index );
         println!("expected: 9");
@@ -172,40 +74,7 @@ mod tests {
     }
     #[test]
     fn test_bwd_search(){
-        let mut example = BitVec::<u8>::new();
-        println!("test running ----------------");
-        example.push(true);
-        example.push(true);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-        
-        example.push(true);
-        example.push(false);
-        example.push(false);
-        example.push(true);
-
-        example.push(false);
-        example.push(false);
-        example.push(true);
-        example.push(true);
-
-        example.push(false);
-        example.push(true);
-        example.push(false);
-        example.push(true);
-        
-        example.push(false);
-        example.push(false);
-        example.push(false);
-
-        println!("test running ----r------------");
-        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+        let test_tree = create_rmm_test_tree();
         let result_index = test_tree.bwdsearch(4, -2);
         println!("result: {} ",result_index );
         println!("expected: 0");
@@ -215,7 +84,30 @@ mod tests {
     }
 
     #[test]
+    fn test_select_one(){
+        let test_tree = create_rmm_test_tree();
+        assert_eq!(test_tree.rmm_select_one(1), 0);
+        assert_eq!(test_tree.rmm_select_one(2), 1);
+        assert_eq!(test_tree.rmm_select_one(3), 2);
+        assert_eq!(test_tree.rmm_select_one(4), 4);
+        assert_eq!(test_tree.rmm_select_one(5), 7);
+        assert_eq!(test_tree.rmm_select_one(6), 8);
+        assert_eq!(test_tree.rmm_select_one(7), 9);
+        assert_eq!(test_tree.rmm_select_one(8), 12);
+        assert_eq!(test_tree.rmm_select_one(9), 15);
+        assert_eq!(test_tree.rmm_select_one(10), 16);
+        assert_eq!(test_tree.rmm_select_one(11), 18);
+        assert_eq!(test_tree.rmm_select_one(12), 20);
+    }
+
+    #[test]
     fn save_the_tree() {
+        let test_tree = create_rmm_test_tree();
+        RangeMinMax::save_tree_as_file(test_tree);
+     //  assert_eq!(true, true);
+    }
+
+    fn create_rmm_test_tree() -> RangeMinMax::RangeMinMax {
         // create an example BV tree
         let mut example = BitVec::<u8>::new();
 
@@ -249,9 +141,8 @@ mod tests {
         example.push(false);
         example.push(false);
 
-        println!("test running ----r------------");
+        println!("test bitVec created");
         let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
-        RangeMinMax::save_tree_as_file(test_tree);
-     //  assert_eq!(true, true);
+        return test_tree;
     }
 }

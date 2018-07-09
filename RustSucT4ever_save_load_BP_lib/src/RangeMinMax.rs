@@ -326,34 +326,44 @@ impl RangeMinMax{
         return (i+1) - self.rmm_rank_one(i);
     }
 
-    fn rmm_select_one(&self, i: u64) -> u64 {
+    pub fn rmm_select_one(&self, i: u64) -> u64 {
         let mut k = i;
         let mut block_vec_index = 1;
-        let mut block_length = self.bal_parentheses_vec.len();
+        let mut block_length = ((self.blockvector.len()*(self.block_size as usize)) / 2) as u64;
         let mut result = 0;
         // if isLeaf 
         while (block_vec_index < self.blockvector.len()/2) {
+            block_length /= 2;
+            block_vec_index *= 2;
             // elseif Vlc.1 > k return Vlc.select1k
-            let left_child_openings = (block_length + (self.blockvector[block_vec_index as usize].unwrap().excess as u64)) / 2;
+            let left_child_openings = (((block_length as i64) + (self.blockvector[block_vec_index as usize].unwrap().excess as i64)) / 2) as u64;
             if (left_child_openings >= k) {
-                block_vec_index *= 2;
             }
             // else return |Vlc| + Vrc.select1(k-Vlc.1)
             else {
-                block_length /= 2;
                 result += block_length;
                 k -= left_child_openings;
-                block_vec_index = block_vec_index*2 + 1;
+                block_vec_index += 1;
             }
         }
         // return k-te oeffnende
-        let mut bit_index: u64 = (block_vec_index * (self.block_size as usize)) as u64;
+        let mut bit_index: u64 = ((block_vec_index - self.blockvector.len()/2) * (self.block_size as usize)) as u64;
         while (k>0) {
+            println!("self.bal_parentheses_vec.len(): {} ",self.bal_parentheses_vec.len() );
+            println!("self.block_size: {} ",self.block_size );
+            println!("k: {} ",k );
+            println!("block_vec_index: {} ",block_vec_index );
+            println!("block_length: {} ",block_length );
+            println!("result: {} ",result );
+            println!("bit_index: {} ",bit_index );
             if self.bal_parentheses_vec.get_bit(bit_index) {
-                bit_index += 1;
                 k -= 1;
             }
-        }        
+            if (k>0) {
+                bit_index += 1;
+            }
+        }
+        result += (bit_index % self.block_size);       
         return result;
     }
 
