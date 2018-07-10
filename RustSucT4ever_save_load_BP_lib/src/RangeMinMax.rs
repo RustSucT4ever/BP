@@ -290,7 +290,6 @@ impl RangeMinMax{
         }
     }
 
-        
     pub fn rmm_rank_one(&self, i: u64) -> u64 {
         //find the block
         let block_vec_index: u64 = i / self.block_size;
@@ -391,6 +390,11 @@ impl RangeMinMax{
         return result;
     }
     
+pub fn calc_excess(&self, pos: u64) -> u64{
+    return self.rmm_rank_one(pos)-self.rmm_rank_zero(pos);
+
+}
+    
 }
 
     fn calc_count_min_excess(block_left:Block, block_right:Block) ->i64{
@@ -404,23 +408,8 @@ impl RangeMinMax{
 
     }
 
-/*
-fn calc_excess(tree: RangeMinMax, desired_pos : u32) -> u32{
 
-    let block_pos = desired_pos / tree.block_size;   //abrunden!
-    let last_excess = part_excess(tree, block_pos); //berechnet den excess bis zum ende des letzten blocks.
-    for i in block_pos .. desired_pos {
-        if tree.bal_parentheses_vec[i] == 1{
-            last_excess +=1;
-        }
-        else{
-            last_excess -=1;
-        }
-    }
-    return last_excess;
 
-}
-*/
 /*
 fn part_excess(tree:RangeMinMax, rounded_pos:u32) -> u32{
     
