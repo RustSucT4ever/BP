@@ -64,10 +64,10 @@ impl Bp {
         return contents;
     }
 
-/*
+
     pub fn load_bp(file_path: &String) -> BitVec {
         // datei lesen
-        let mut contents = load_file(&file_path);
+        let mut contents = Bp::load_file(&file_path);
         // deserialisieren
         let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
         // überprüfen ob das geladene auch ein BP ist
@@ -97,7 +97,7 @@ impl Bp {
         // ausgeben
         return bit_vec;
     }
-*/
+
     pub fn save_bp(tree: &BitVec) -> String{
         // define where to store file
         let path = Path::new("our_bv_tree.txt");
