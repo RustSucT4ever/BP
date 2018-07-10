@@ -128,6 +128,10 @@ impl RangeMinMax{
         return RangeMinMax {blockvector: range_min_max_tree, bal_parentheses_vec: bp_vec, block_size: block_size};
     }
 
+    pub fn get_bit(&self, i:u64) -> bool{
+        return self.bal_parentheses_vec.get_bit(i);
+    }
+
     pub fn fwdsearch(&self, i:u64, d:i64) -> u64{
         
         let k = i/self.block_size;
@@ -194,7 +198,6 @@ impl RangeMinMax{
             }
         }
     }
-
    pub fn bwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size; 
         let mut e = 0;

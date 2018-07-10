@@ -15,7 +15,7 @@ struct Bp {
 
 impl BpLoudsCommonTrait for Bp {
     fn isleaf (&self, pos:u64) -> bool{
-       return self.tree.fwdsearch(pos, 0)==pos+1;
+       return self.tree.get_bit(pos +1) == false;
     }
     fn parent(& self, pos:u64) -> u64{
         return self.tree.bwdsearch(pos, -2)+1;
@@ -131,7 +131,7 @@ impl Bp {
 #[cfg(test)]
 mod tests {
     use bv::{BitVec, Bits};
-    use bp;
+    use bp::*;
 
     #[test]
     fn test_pre_rank(){
@@ -204,7 +204,7 @@ mod tests {
         assert_eq!(test_tree.next_sibling(1), 3);
     }
 
-    fn create_test_tree() -> bp {
+    fn create_test_tree() -> Bp {
         let mut bp_tree = BitVec::new();
             bp_tree.push(true);
             bp_tree.push(true);
@@ -212,7 +212,7 @@ mod tests {
             bp_tree.push(true);
             bp_tree.push(false);
             bp_tree.push(false);
-        let bp_example = Bp::new(bp_tree);
+        let bp_example = Bp::new(bp_tree, 2);
         return bp_example;
     }
 }
