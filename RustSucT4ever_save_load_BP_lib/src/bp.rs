@@ -142,7 +142,7 @@ mod tests {
         assert_eq!(test_tree.pre_rank(3), 3);
         assert_eq!(test_tree.pre_rank(4), 3);
         assert_eq!(test_tree.pre_rank(5), 3);
-        assert_eq!(test_tree.pre_rank(6), 3);
+       // assert_eq!(test_tree.pre_rank(6), 3); Stelle 6 gibt es nicht du ...
     }
 
     #[test]
