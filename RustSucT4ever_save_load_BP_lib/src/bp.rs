@@ -174,7 +174,7 @@ mod tests {
         let test_tree = create_test_tree();
         assert_eq!(test_tree.depth(0), 1);
         assert_eq!(test_tree.depth(1), 2);
-        assert_eq!(test_tree.depth(3), 3);
+        assert_eq!(test_tree.depth(3), 2);
     }
 
     #[test]
