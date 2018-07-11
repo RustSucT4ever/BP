@@ -11,9 +11,9 @@ trait BpLoudsCommonTrait {
     fn next_sibling(pos:u64) -> u64; 
 }
 
-/*
+
 #[cfg(test)]
-mod tests {
+mod load_tests {
     use bp::load_bp;
     use bp::save_bp;
     use bv::{BitVec, Bits};
@@ -44,7 +44,7 @@ mod tests {
         assert_eq!(checksum.get_bit(5), false);
     }
 }
-*/
+
 
 #[cfg(test)]
 mod tests {
