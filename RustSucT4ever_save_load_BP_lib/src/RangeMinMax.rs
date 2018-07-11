@@ -132,7 +132,11 @@ impl RangeMinMax{
         return self.bal_parentheses_vec.get_bit(i);
     }
 
-    pub fn fwdsearch(&self, i:u64, d:i64) -> u64{
+    pub fn size(&self) -> u64 {
+        return self.bal_parentheses_vec.len();
+    }
+
+    pub fn fwdsearch(&self, i:u64, d:i64) -> Option<u64>{
         
         let k = i/self.block_size;
         let mut e = 0;
@@ -143,7 +147,7 @@ impl RangeMinMax{
                 e-=1;
             }
             if  e == d {
-                return j;
+                return Option::from(j);
             }
         }
         //println!("d is {}", d);
@@ -157,6 +161,9 @@ impl RangeMinMax{
                 j =  (j as usize -1)/2;
             }else {
                 j = j+1;
+                if self.blockvector[j].is_none() {
+                    return None;
+                }
                 if self.blockvector[j].unwrap().min_ex<=b && b<= self.blockvector[j].unwrap().max_ex {
                     break;
                     //self.step3( j,d)
@@ -183,12 +190,16 @@ impl RangeMinMax{
                         e-=1;
                     }
                     if e==b {
-                        return m as u64;
+                        return Option::from(m as u64);
                     }
                 }
+                return None;
             }else{
                 let left = j*2;
                 let right = j*2 +1;
+                if self.blockvector[left].is_none() {
+                    return None;
+                }
                 if self.blockvector[left].unwrap().min_ex <= b && b<= self.blockvector[left].unwrap().max_ex {
                     j = left;
                 }else{
@@ -198,7 +209,7 @@ impl RangeMinMax{
             }
         }
     }
-   pub fn bwdsearch(&self, i:u64, d:i64) -> u64{
+   pub fn bwdsearch(&self, i:u64, d:i64) -> Option<u64>{
         let k = i/self.block_size; 
         let mut e = 0;
         /*
@@ -221,7 +232,7 @@ impl RangeMinMax{
                 e+=1;
             }
             if  e == d {
-                return s-1;
+                return Option::from(s-1);
             }
             s-=1;
         }
@@ -232,33 +243,36 @@ impl RangeMinMax{
             e+=1;
         }
         
-        println!("e is {}", e);
+        //println!("e is {}", e);
         let mut b = d - e ;
-        println!("d is {}", b);
+        //println!("d is {}", b);
         let n = (self.blockvector.len())/2; //weil unser k um eins kleiner als das im paper
         let mut j = n + k as usize;
-        println!("Step 1 is done");
-        println!("Starts at Node {}", j);
+        //println!("Step 1 is done");
+        //println!("Starts at Node {}", j);
         loop{
             if j%2 == 0 {
                 j =  (j as usize)/2;
-                println!("Going to {} and d is {}",j, b );
+                //println!("Going to {} and d is {}",j, b );
             }else {
                 j = j-1;
+                if self.blockvector[j].is_none() {
+                    return None;
+                }
                 //println!("Going to {} and d is {}",j, b );
                 if self.blockvector[j].unwrap().min_ex-self.blockvector[j].unwrap().excess<=b && b<= self.blockvector[j].unwrap().max_ex -self.blockvector[j].unwrap().excess {
                     b = b + self.blockvector[j].unwrap().excess;
-                    println!("Going to {} and d is {}",j, b );
+                    //println!("Going to {} and d is {}",j, b );
                     break;
                     //self.step3( j,d)
                 }else{
                     //b = b + self.blockvector[j].unwrap().excess;
                     j = j/2;
-                    println!("Going to {} and d is {}",j, b );
+                    //println!("Going to {} and d is {}",j, b );
                 }
             }
         }
-        println!("Step 2 is done");
+        //println!("Step 2 is done");
 
         loop{
             let n = (self.blockvector.len())/2;  //(self.blockvector.len()+1)/2 ohne extra block
@@ -273,21 +287,25 @@ impl RangeMinMax{
                         e-=1;
                     }
                     if e==b {
-                        return m as u64;
+                        return Option::from(m as u64);
                     }
                 }
+                return None;
             }else{
                 let left = j*2;
                 let right = j*2 +1;
+                if self.blockvector[left].is_none()|| self.blockvector[right].is_none() {
+                    return None;
+                }
                 let pot_new_b = b-self.blockvector[left].unwrap().excess;
                 if self.blockvector[right].unwrap().min_ex <=  pot_new_b && pot_new_b <= self.blockvector[right].unwrap().max_ex{
                     j = right;
                     b = b-self.blockvector[left].unwrap().excess;
-                    println!("Going to {} and d is {}",j, b );
+                    //println!("Going to {} and d is {}",j, b );
                 }else{
                     j = left;
                     //b = b-self.blockvector[left].unwrap().excess;
-                    println!("Going to {} and d is {}",j, b );
+                    //println!("Going to {} and d is {}",j, b );
                 }
             }
         }
