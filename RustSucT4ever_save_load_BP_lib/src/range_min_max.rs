@@ -129,6 +129,9 @@ impl RangeMinMax{
     pub fn get_bit(&self, i:u64) -> bool{
         return self.bal_parentheses_vec.get_bit(i);
     }
+    pub fn size(&self) -> u64{
+        return self.bal_parentheses_vec.len();
+    }
 
     pub fn fwdsearch(&self, i:u64, d:i64) -> u64{
         

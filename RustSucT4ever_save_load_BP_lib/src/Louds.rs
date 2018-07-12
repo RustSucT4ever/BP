@@ -59,11 +59,11 @@ impl BpLoudsCommonTrait for Louds {
     fn parent(& self, pos:u64) -> u64{
         self.prev_0(self.data_struct.select_1(self.data_struct.rank_0(pos).unwrap()).unwrap()) +1
     }
-    fn first_child(&self, pos:u64) -> u64{
-        self.child(pos, 1)
+    fn first_child(&self, pos:u64) -> Option<u64>{
+        Option::from(self.child(pos, 1))
     }
-    fn next_sibling(&self, pos:u64) -> u64{
-        self.data_struct.select_0(self.data_struct.select_1(self.data_struct.rank_0(pos-1).unwrap()+1).unwrap()+1).unwrap()+1
+    fn next_sibling(&self, pos:u64) -> Option<u64>{
+        Option::from(self.data_struct.select_0(self.data_struct.select_1(self.data_struct.rank_0(pos-1).unwrap()+1).unwrap()+1).unwrap()+1)
     }
 }
 
@@ -91,14 +91,14 @@ mod tests {
     #[test]
     fn test_first_child(){
         let test_tree : Louds = create_test_tree();
-        assert_eq!(test_tree.first_child(1),4);
-        assert_eq!(test_tree.first_child(5),7);
+        assert_eq!(test_tree.first_child(1).unwrap(),4);
+        assert_eq!(test_tree.first_child(5).unwrap(),7);
     }
 
     #[test]
     fn test_next_sibling(){
         let test_tree : Louds = create_test_tree();
-        assert_eq!(test_tree.next_sibling(4),5);
+        assert_eq!(test_tree.next_sibling(4).unwrap(),5);
     }  
 
     #[test]

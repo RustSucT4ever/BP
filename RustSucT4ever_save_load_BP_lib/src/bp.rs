@@ -15,9 +15,21 @@ struct Bp {
 
 impl BpLoudsCommonTrait for Bp {
     fn isleaf (&self, pos:u64) -> bool{
-       return self.tree.get_bit(pos +1) == false;
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
+        return self.tree.get_bit(pos +1) == false;
     }
     fn parent(& self, pos:u64) -> u64{
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
         // exception for nodes with excess 2 (then return the root node)
         if self.tree.calc_excess(pos) - 2 == 0 {
             return 0;
@@ -25,11 +37,31 @@ impl BpLoudsCommonTrait for Bp {
         // otherwise regular calculation
         return self.tree.bwdsearch(pos, -2)+1;
     }
-    fn first_child(&self, pos:u64) -> u64{  //TODO turn return value to an optional for the case that a child does not exist.
-        return pos+1;
+    fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
+        if self.isleaf(pos){
+            return None;
+        }
+        return Option::from(pos+1);
     }
-    fn next_sibling(&self, pos:u64) -> u64{ //TODO incase next sibling does not exist.
-        return self.tree.fwdsearch(pos, -1)+1
+    fn next_sibling(&self, pos:u64) -> Option<u64>{ //TODO incase next sibling does not exist.
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
+        let n = self.tree.fwdsearch(pos, -1)+1;
+        if self.tree.get_bit(n) {
+            return Option::from(n);
+        }else{
+            return None;
+        }
     }
 }
 
@@ -259,13 +291,13 @@ mod tests {
     #[test]
     fn test_first_child(){
         let test_tree = create_test_tree();
-        assert_eq!(test_tree.first_child(0), 1);
+        assert_eq!(test_tree.first_child(0).unwrap(), 1);
     }
 
     #[test]
     fn test_next_sibling(){
         let test_tree = create_test_tree();
-        assert_eq!(test_tree.next_sibling(1), 3);
+        assert_eq!(test_tree.next_sibling(1).unwrap(), 3);
     }
 
     fn create_test_tree() -> Bp {
