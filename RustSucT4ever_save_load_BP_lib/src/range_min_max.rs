@@ -4,17 +4,15 @@ use bv::{BitVec, Bits};
 use std::cmp;
 use std::fs::File;
 use std::path::Path;
-
 use std::io::prelude::*;
 use std::error::Error;
-
-
 
 pub struct RangeMinMax {
     blockvector: Vec<Option<Block>>,
     bal_parentheses_vec: BitVec<u8>,
     block_size:u64
 }
+
 #[derive(Copy, Clone)]
 pub struct Block {
     excess: i64,
@@ -110,7 +108,7 @@ impl RangeMinMax{
         range_min_max_tree.push(Option::None);
         let mut pow = 1;
         //println!("Anzahl an levels {}", block_vecs.len());
-        for i in 0..block_vecs.len(){
+        for _i in 0..block_vecs.len(){
             let curr_vec = block_vecs.pop().unwrap();
             for j in 0..pow{
                 if j<curr_vec.len(){
@@ -198,6 +196,7 @@ impl RangeMinMax{
             }
         }
     }
+
    pub fn bwdsearch(&self, i:u64, d:i64) -> u64{
         let k = i/self.block_size; 
         let mut e = 0;
@@ -334,13 +333,13 @@ impl RangeMinMax{
         let mut block_length = ((self.blockvector.len()*(self.block_size as usize)) / 2) as u64;
         let mut result = 0;
         // if isLeaf 
-        while (block_vec_index < self.blockvector.len()/2) {
+        while block_vec_index < self.blockvector.len()/2 {
             block_length /= 2;
             block_vec_index *= 2;
             // elseif Vlc.1 > k return Vlc.select1k
             let left_child_openings = (((block_length as i64) + (self.blockvector[block_vec_index as usize].unwrap().excess as i64)) / 2) as u64;
             // else return |Vlc| + Vrc.select1(k-Vlc.1)
-            if (left_child_openings < k) {
+            if left_child_openings < k {
                 result += block_length;
                 k -= left_child_openings;
                 block_vec_index += 1;
@@ -348,15 +347,15 @@ impl RangeMinMax{
         }
         // return k-te oeffnende
         let mut bit_index: u64 = ((block_vec_index - self.blockvector.len()/2) * (self.block_size as usize)) as u64;
-        while (k>0) {
+        while k>0 {
             if self.bal_parentheses_vec.get_bit(bit_index) {
                 k -= 1;
             }
-            if (k>0) {
+            if k>0 {
                 bit_index += 1;
             }
         }
-        result += (bit_index % self.block_size);       
+        result += bit_index % self.block_size;       
         return result;
     }
 
@@ -366,14 +365,14 @@ impl RangeMinMax{
         let mut block_length = ((self.blockvector.len()*(self.block_size as usize)) / 2) as u64;
         let mut result = 0;
         // if isLeaf 
-        while (block_vec_index < self.blockvector.len()/2) {
+        while block_vec_index < self.blockvector.len()/2 {
             block_length /= 2;
             block_vec_index *= 2;
             // elseif |Vlc| Vlc.1 > k return Vlc.select0k
             let left_child_openings = (((block_length as i64) + (self.blockvector[block_vec_index as usize].unwrap().excess as i64)) / 2) as u64;
             let left_child_closings = block_length - left_child_openings;
             // else return |Vlc| + Vrc.select0(k- (|Vlc| - Vlc.1))
-            if (left_child_closings < k) {
+            if left_child_closings < k {
                 result += block_length;
                 k -= left_child_closings;
                 block_vec_index += 1;
@@ -381,22 +380,22 @@ impl RangeMinMax{
         }
         // return k-te schließende
         let mut bit_index: u64 = ((block_vec_index - self.blockvector.len()/2) * (self.block_size as usize)) as u64;
-        while (k>0) {
+        while k>0 {
             if !self.bal_parentheses_vec.get_bit(bit_index) {
                 k -= 1;
             }
-            if (k>0) {
+            if k>0 {
                 bit_index += 1;
             }
         }        
-        result += (bit_index % self.block_size);  
+        result += bit_index % self.block_size;  
         return result;
     }
     
-pub fn calc_excess(&self, pos: u64) -> u64{
-    return self.rmm_rank_one(pos)-self.rmm_rank_zero(pos);
+    pub fn calc_excess(&self, pos: u64) -> u64{
+        return self.rmm_rank_one(pos)-self.rmm_rank_zero(pos);
 
-}
+    }
     
 }
 

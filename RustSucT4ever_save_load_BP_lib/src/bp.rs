@@ -7,7 +7,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
 use std::path::Path;
-use RangeMinMax::RangeMinMax;
+use range_min_max::RangeMinMax;
 
 struct Bp {
     tree: RangeMinMax
@@ -67,7 +67,7 @@ impl Bp {
 
     pub fn load_bp(file_path: &String) -> BitVec {
         // datei lesen
-        let mut contents = Bp::load_file(&file_path);
+        let contents = Bp::load_file(&file_path);
         // deserialisieren
         let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
         // überprüfen ob das geladene auch ein BP ist
@@ -129,7 +129,7 @@ impl Bp {
 
 pub fn load_bp(file_path: &String) -> BitVec {
         // datei lesen
-        let mut contents = Bp::load_file(&file_path);
+        let contents = Bp::load_file(&file_path);
         // deserialisieren
         let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
         // überprüfen ob das geladene auch ein BP ist
@@ -189,7 +189,7 @@ pub fn load_bp(file_path: &String) -> BitVec {
 
 #[cfg(test)]
 mod tests {
-    use bv::{BitVec, Bits};
+    use bv::{BitVec};
     use bp::*;
 
     #[test]

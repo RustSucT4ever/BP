@@ -1,16 +1,8 @@
 extern crate bv;
 mod common_tree;
 mod bp;
-mod Louds;
-mod RangeMinMax;
-
-trait BpLoudsCommonTrait {
-    fn isleaf (pos:u64) -> bool;
-    fn parent(pos:u64) -> u64;
-    fn first_child(pos:u64) -> u64;
-    fn next_sibling(pos:u64) -> u64; 
-}
-
+mod louds;
+mod range_min_max;
 
 #[cfg(test)]
 mod load_tests {
@@ -48,7 +40,7 @@ mod load_tests {
 
 #[cfg(test)]
 mod tests {
-    use RangeMinMax;
+    use range_min_max;
     use bv::{BitVec};
 
     #[test]
@@ -120,11 +112,11 @@ mod tests {
     #[test]
     fn save_the_tree() {
         let test_tree = create_rmm_test_tree();
-        RangeMinMax::save_tree_as_file(test_tree);
+        range_min_max::save_tree_as_file(test_tree);
      //  assert_eq!(true, true);
     }
 
-    fn create_rmm_test_tree() -> RangeMinMax::RangeMinMax {
+    fn create_rmm_test_tree() -> range_min_max::RangeMinMax {
         // create an example BV tree
         let mut example = BitVec::<u8>::new();
 
@@ -159,7 +151,7 @@ mod tests {
         example.push(false);
 
         println!("test bitVec created");
-        let test_tree = RangeMinMax::RangeMinMax::new(example, 4);
+        let test_tree = range_min_max::RangeMinMax::new(example, 4);
         return test_tree;
     }
 }
