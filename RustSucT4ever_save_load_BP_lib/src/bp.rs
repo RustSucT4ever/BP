@@ -18,6 +18,11 @@ impl BpLoudsCommonTrait for Bp {
        return self.tree.get_bit(pos +1) == false;
     }
     fn parent(& self, pos:u64) -> u64{
+        // exception for nodes with excess 2 (then return the root node)
+        if self.tree.calc_excess(pos) - 2 == 0 {
+            return 0;
+        }
+        // otherwise regular calculation
         return self.tree.bwdsearch(pos, -2)+1;
     }
     fn first_child(&self, pos:u64) -> u64{  //TODO turn return value to an optional for the case that a child does not exist.
