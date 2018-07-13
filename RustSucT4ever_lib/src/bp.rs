@@ -138,69 +138,7 @@ impl Bp {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
         return contents;
-    }
-
-
-    pub fn load_bp(file_path: &String) -> BitVec {
-        // datei lesen
-        let contents = Bp::load_file(&file_path);
-        // deserialisieren
-        let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
-        // überprüfen ob das geladene auch ein BP ist
-        let l = bit_vec.len();
-        let mut correct = true; 
-        let mut count = 0;
-        for i in 0..l {
-            if bit_vec.get_bit(i) == true {
-                count = count+1;
-            }
-            if bit_vec.get_bit(i) == false {
-                count = count-1;
-                if i != l-1 && count<=0 {
-                    correct = false;
-                }
-            }
-        }
-
-        if count>0 {
-            correct = false;
-        }
-
-        if !correct {
-            println!("Falscher String!");
-        }
-
-        // ausgeben
-        return bit_vec;
-    }
-
-    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
-        // define where to store file
-        let path = Path::new(filepath);
-        let display = path.display();
-
-        // Open a file in write-only mode, returns `io::Result<File>`
-        let mut file = match File::create(&path) {
-            Err(why) => panic!("couldn't create {}: {}",
-                            display,
-                            why.description()),
-            Ok(file) => file,
-        };
-        
-        // serialisieren
-        let bv_tree_str : String = serde_json::to_string(tree).unwrap();
-
-        // datei speichern
-        match file.write_all(bv_tree_str.as_bytes()) {
-            Err(why) => {
-                panic!("couldn't write to {}: {}", display,
-                                                why.description())
-            },
-            Ok(_) => println!("successfully wrote to {}", display),
-        }
-        return display.to_string();
-    }
-    
+    }    
 }
 
 pub fn load_bp(file_path: &String) -> BitVec {
@@ -236,29 +174,29 @@ pub fn load_bp(file_path: &String) -> BitVec {
         return bit_vec;
     }
 
-    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
-        // define where to store file
-        let path = Path::new(filepath);
-        let display = path.display();
+pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
+    // define where to store file
+    let path = Path::new(filepath);
+    let display = path.display();
 
-        // Open a file in write-only mode, returns `io::Result<File>`
-        let mut file = match File::create(&path) {
-            Err(why) => panic!("couldn't create {}: {}",
-                            display,
-                            why.description()),
-            Ok(file) => file,
-        };
-        
-        // serialisieren
-        let bv_tree_str : String = serde_json::to_string(tree).unwrap();
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}",
+                        display,
+                        why.description()),
+        Ok(file) => file,
+    };
+    
+    // serialisieren
+    let bv_tree_str : String = serde_json::to_string(tree).unwrap();
 
-        // datei speichern
-        match file.write_all(bv_tree_str.as_bytes()) {
-            Err(why) => {
-                panic!("couldn't write to {}: {}", display,
-                                                why.description())
-            },
-            Ok(_) => println!("successfully wrote to {}", display),
-        }
-        return display.to_string();
+    // datei speichern
+    match file.write_all(bv_tree_str.as_bytes()) {
+        Err(why) => {
+            panic!("couldn't write to {}: {}", display,
+                                            why.description())
+        },
+        Ok(_) => println!("successfully wrote to {}", display),
     }
+    return display.to_string();
+}

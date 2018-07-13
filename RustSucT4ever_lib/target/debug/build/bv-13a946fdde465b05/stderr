@@ -1,0 +1,16 @@
+error[E0658]: 128-bit type is unstable (see issue #35118)
+ --> <anon>:1:14
+  |
+1 | pub type T = u128; fn main() { }
+  |              ^^^^
+
+error: aborting due to previous error
+
+error[E0658]: use of unstable library feature 'inclusive_range': recently added, follows RFC (see issue #28237)
+ --> <anon>:1:14
+  |
+1 | pub type T = ::std::ops::RangeInclusive<u64>; fn main() { }
+  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to previous error
+
