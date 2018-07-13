@@ -344,6 +344,9 @@ impl RangeMinMax{
     }
 
     pub fn rmm_select_one(&self, i: u64) -> u64 {
+        if(i> self.bal_parentheses_vec.len()/2){
+            panic!("Tried accessing node {}, but there are only {} nodes", i, self.bal_parentheses_vec.len()/2))
+        }
         let mut k = i;
         let mut block_vec_index = 1;
         let mut block_length = ((self.blockvector.len()*(self.block_size as usize)) / 2) as u64;
@@ -376,6 +379,9 @@ impl RangeMinMax{
     }
 
     pub fn rmm_select_zero(&self, i: u64) -> u64 {
+        if(i> self.bal_parentheses_vec.len()/2){
+            panic!("Tried accessing node {}, but there are only {} nodes", i, self.bal_parentheses_vec.len()/2))
+        }
         let mut k = i;
         let mut block_vec_index = 1;
         let mut block_length = ((self.blockvector.len()*(self.block_size as usize)) / 2) as u64;
