@@ -31,11 +31,12 @@ impl BpLoudsCommonTrait for Bp {
             panic!("Index {} is not the beginning of a node.", pos);
         }
         // exception for nodes with excess 2 (then return the root node)
-        if self.tree.calc_excess(pos) - 2 == 0 {
+        let possible = self.tree.bwdsearch(pos, -2);
+        if possible.is_none() {
             return 0;
         }
         // otherwise regular calculation
-        return self.tree.bwdsearch(pos, -2)+1;
+        return possible.unwrap()+1;
     }
     fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
         if pos >= self.tree.size(){
@@ -56,7 +57,7 @@ impl BpLoudsCommonTrait for Bp {
         if !self.tree.get_bit(pos) {
             panic!("Index {} is not the beginning of a node.", pos);
         }
-        let n = self.tree.fwdsearch(pos, -1)+1;
+        let n = self.tree.fwdsearch(pos, -1).unwrap()+1;
         if self.tree.get_bit(n) {
             return Option::from(n);
         }else{
@@ -88,7 +89,7 @@ impl Bp {
         if !self.tree.get_bit(pos) {
             panic!("Index {} is not the beginning of a node.", pos);
         }
-        return self.tree.fwdsearch(pos,-1);
+        return self.tree.fwdsearch(pos,-1).unwrap();
     }
 
     pub fn ancestor(&self, pos_x:u64,pos_y:u64) -> bool {

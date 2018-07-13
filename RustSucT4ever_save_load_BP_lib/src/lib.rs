@@ -59,7 +59,7 @@ mod tests {
     #[test]
     fn test_fwd_search(){
         let test_tree = create_rmm_test_tree();
-        let result_index = test_tree.fwdsearch(2, 1);
+        let result_index = test_tree.fwdsearch(2, 1).unwrap();
         println!("result: {} ",result_index );
         println!("expected: 9");
         assert_eq!(result_index, 9);
@@ -67,12 +67,12 @@ mod tests {
     #[test]
     fn test_bwd_search(){
         let test_tree = create_rmm_test_tree();
-        let result_index = test_tree.bwdsearch(4, -2);
+        let result_index = test_tree.bwdsearch(4, -2).unwrap();
         println!("result: {} ",result_index );
         println!("expected: 0");
         assert_eq!(result_index, 0);
-        assert_eq!(test_tree.bwdsearch(17, -1), 14);
-        assert_eq!(test_tree.bwdsearch(23, 3), 20);
+        assert_eq!(test_tree.bwdsearch(17, -1).unwrap(), 14);
+        assert_eq!(test_tree.bwdsearch(23, 3).unwrap(), 20);
     }
 
     #[test]
