@@ -1,0 +1,6 @@
+[excess: 0min excess: 0max excess: 4#min excess: 1]
+[excess: 2min excess: 1max excess: 4#min excess: 3][excess: -2min excess: -2max excess: 1#min excess: 1]
+[excess: 2min excess: 1max excess: 3#min excess: 2][excess: 0min excess: -1max excess: 2#min excess: 1][excess: -2min excess: -2max excess: 1#min excess: 1][NONE]
+[excess: 2min excess: 1max excess: 3#min excess: 1][excess: 0min excess: -1max excess: 1#min excess: 1][excess: 0min excess: 0max excess: 2#min excess: 1][excess: 0min excess: -1max excess: 1#min excess: 1][excess: 0min excess: 0max excess: 1#min excess: 2][excess: -2min excess: -2max excess: 1#min excess: 1][NONE][NONE]
+
+ [truetruetruefalse|truefalsefalsetrue|truetruefalsefalse|truefalsefalsetrue|truefalsetruefalse|truefalsefalsefalse]
