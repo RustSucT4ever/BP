@@ -82,6 +82,12 @@ impl Bp {
         return self.tree.calc_excess(pos);
     }
     pub fn find_close(&self, pos:u64) -> u64{
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
         return self.tree.fwdsearch(pos,-1);
     }
 
@@ -135,9 +141,9 @@ impl Bp {
         return bit_vec;
     }
 
-    pub fn save_bp(tree: &BitVec) -> String{
+    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
         // define where to store file
-        let path = Path::new("our_bv_tree.txt");
+        let path = Path::new(filepath);
         let display = path.display();
 
         // Open a file in write-only mode, returns `io::Result<File>`
@@ -197,9 +203,9 @@ pub fn load_bp(file_path: &String) -> BitVec {
         return bit_vec;
     }
 
-    pub fn save_bp(tree: &BitVec) -> String{
+    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
         // define where to store file
-        let path = Path::new("our_bv_tree.txt");
+        let path = Path::new(filepath);
         let display = path.display();
 
         // Open a file in write-only mode, returns `io::Result<File>`
