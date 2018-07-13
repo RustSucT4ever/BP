@@ -86,6 +86,12 @@ impl Bp {
     }
 
     pub fn depth(&self, pos:u64) -> u64 {
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
         return self.tree.calc_excess(pos);
     }
     pub fn find_close(&self, pos:u64) -> u64{
@@ -99,10 +105,30 @@ impl Bp {
     }
 
     pub fn ancestor(&self, pos_x:u64,pos_y:u64) -> bool {
+        if pos_x >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos_x);
+        }
+        if !self.tree.get_bit(pos_x) {
+            panic!("Index {} is not the beginning of a node.", pos_x);
+        }
+
+        if pos_y >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos_y);
+        }
+        if !self.tree.get_bit(pos_y) {
+            panic!("Index {} is not the beginning of a node.", pos_y);
+        }
+
         return pos_x<=pos_y && pos_y<=self.find_close(pos_x);
     }
 
     pub fn subtree_size(&self, pos:u64) -> u64 {
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
         return (self.find_close(pos)-pos+1)/2;
     }
     
