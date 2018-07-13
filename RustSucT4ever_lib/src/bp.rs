@@ -15,24 +15,14 @@ pub struct Bp {
 
 impl BpLoudsCommonTrait for Bp {
     fn isleaf (&self, pos:u64) -> bool{
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         return self.tree.get_bit(pos +1) == false;
     }
     fn parent(& self, pos:u64) -> Option<u64>{
         if pos == 0 {
             return None;
         }
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         // exception for nodes with excess 2 (then return the root node)
         let possible = self.tree.bwdsearch(pos, -2);
         if possible.is_none() {
@@ -42,24 +32,14 @@ impl BpLoudsCommonTrait for Bp {
         return Option::from(possible.unwrap()+1);
     }
     fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         if self.isleaf(pos){
             return None;
         }
         return Option::from(pos+1);
     }
     fn next_sibling(&self, pos:u64) -> Option<u64>{ //TODO incase next sibling does not exist.
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         let n = self.tree.fwdsearch(pos, -1).unwrap()+1;
         if self.tree.get_bit(n) {
             return Option::from(n);
@@ -75,10 +55,8 @@ impl Bp {
     }
 
     pub fn pre_rank(&self, pos:u64) -> u64 {
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-       return  self.tree.rmm_rank_one(pos);
+        //self.maybe_panic(pos);
+        return  self.tree.rmm_rank_one(pos);
     }
 
     pub fn pre_select(&self, pos:u64) -> u64 {
@@ -86,49 +64,23 @@ impl Bp {
     }
 
     pub fn depth(&self, pos:u64) -> u64 {
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         return self.tree.calc_excess(pos);
     }
     pub fn find_close(&self, pos:u64) -> u64{
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         return self.tree.fwdsearch(pos,-1).unwrap();
     }
 
     pub fn ancestor(&self, pos_x:u64,pos_y:u64) -> bool {
-        if pos_x >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos_x);
-        }
-        if !self.tree.get_bit(pos_x) {
-            panic!("Index {} is not the beginning of a node.", pos_x);
-        }
-
-        if pos_y >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos_y);
-        }
-        if !self.tree.get_bit(pos_y) {
-            panic!("Index {} is not the beginning of a node.", pos_y);
-        }
+        self.maybe_panic(pos_x);
+        self.maybe_panic(pos_y);
 
         return pos_x<=pos_y && pos_y<=self.find_close(pos_x);
     }
 
     pub fn subtree_size(&self, pos:u64) -> u64 {
-        if pos >= self.tree.size(){
-            panic!("Index {} is out of bounds.", pos);
-        }
-        if !self.tree.get_bit(pos) {
-            panic!("Index {} is not the beginning of a node.", pos);
-        }
+        self.maybe_panic(pos);
         return (self.find_close(pos)-pos+1)/2;
     }
     
@@ -139,7 +91,17 @@ impl Bp {
             .expect("something went wrong reading the file");
         return contents;
     }    
+    pub fn maybe_panic(&self, pos: u64){
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
+    }
 }
+
+
 
 pub fn load_bp(file_path: &String) -> BitVec {
         // datei lesen
