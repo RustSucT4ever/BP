@@ -15,9 +15,9 @@ fn test_is_leaf(){
 #[test]
 fn test_parent(){
     let test_tree : Louds = create_test_tree();
-    assert_eq!(test_tree.parent(4),1);
-    assert_eq!(test_tree.parent(5),1);
-    assert_eq!(test_tree.parent(7),5);
+    assert_eq!(test_tree.parent(4).unwrap(),1);
+    assert_eq!(test_tree.parent(5).unwrap(),1);
+    assert_eq!(test_tree.parent(7).unwrap(),5);
 }
 
 #[test]

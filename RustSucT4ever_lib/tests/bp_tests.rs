@@ -59,8 +59,8 @@ fn test_isleaf(){
 #[test]
 fn test_parent(){
     let test_tree = create_test_tree();
-    assert_eq!(test_tree.parent(1), 0);
-    assert_eq!(test_tree.parent(3), 0);
+    assert_eq!(test_tree.parent(1).unwrap(), 0);
+    assert_eq!(test_tree.parent(3).unwrap(), 0);
 }
 
 #[test]

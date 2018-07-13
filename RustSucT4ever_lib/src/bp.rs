@@ -23,7 +23,10 @@ impl BpLoudsCommonTrait for Bp {
         }
         return self.tree.get_bit(pos +1) == false;
     }
-    fn parent(& self, pos:u64) -> u64{
+    fn parent(& self, pos:u64) -> Option<u64>{
+        if pos == 0 {
+            return None;
+        }
         if pos >= self.tree.size(){
             panic!("Index {} is out of bounds.", pos);
         }
@@ -33,10 +36,10 @@ impl BpLoudsCommonTrait for Bp {
         // exception for nodes with excess 2 (then return the root node)
         let possible = self.tree.bwdsearch(pos, -2);
         if possible.is_none() {
-            return 0;
+            return Option::from(0);
         }
         // otherwise regular calculation
-        return possible.unwrap()+1;
+        return Option::from(possible.unwrap()+1);
     }
     fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
         if pos >= self.tree.size(){
@@ -72,6 +75,9 @@ impl Bp {
     }
 
     pub fn pre_rank(&self, pos:u64) -> u64 {
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
        return  self.tree.rmm_rank_one(pos);
     }
 

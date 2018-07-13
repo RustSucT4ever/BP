@@ -56,9 +56,10 @@ impl BpLoudsCommonTrait for Louds {
     fn isleaf (&self, pos:u64) -> bool{
         self.bit_string.get_bit(pos)==false
     }
-    fn parent(& self, pos:u64) -> u64{
-        self.prev_0(self.data_struct.select_1(self.data_struct.rank_0(pos).unwrap()).unwrap()) +1
+    fn parent(& self, pos:u64) -> Option<u64>{
+        Option::from(self.prev_0(self.data_struct.select_1(self.data_struct.rank_0(pos).unwrap()).unwrap()) +1)
     }
+
     fn first_child(&self, pos:u64) -> Option<u64>{
         Option::from(self.child(pos, 1))
     }
