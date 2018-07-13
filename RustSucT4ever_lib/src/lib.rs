@@ -22,7 +22,7 @@ mod load_tests {
         example.push(false);
 
         // save BV to file
-        let example_path = String::from(save_bp(&example));
+        let example_path = String::from(save_bp(&String::from("our_bp_tree.txt"), &example));
 
         // load BV from file
         let checksum = load_bp(&example_path);

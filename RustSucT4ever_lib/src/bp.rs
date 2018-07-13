@@ -31,11 +31,12 @@ impl BpLoudsCommonTrait for Bp {
             panic!("Index {} is not the beginning of a node.", pos);
         }
         // exception for nodes with excess 2 (then return the root node)
-        if self.tree.calc_excess(pos) - 2 == 0 {
+        let possible = self.tree.bwdsearch(pos, -2);
+        if possible.is_none() {
             return 0;
         }
         // otherwise regular calculation
-        return self.tree.bwdsearch(pos, -2)+1;
+        return possible.unwrap()+1;
     }
     fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
         if pos >= self.tree.size(){
@@ -56,7 +57,7 @@ impl BpLoudsCommonTrait for Bp {
         if !self.tree.get_bit(pos) {
             panic!("Index {} is not the beginning of a node.", pos);
         }
-        let n = self.tree.fwdsearch(pos, -1)+1;
+        let n = self.tree.fwdsearch(pos, -1).unwrap()+1;
         if self.tree.get_bit(n) {
             return Option::from(n);
         }else{
@@ -82,7 +83,13 @@ impl Bp {
         return self.tree.calc_excess(pos);
     }
     pub fn find_close(&self, pos:u64) -> u64{
-        return self.tree.fwdsearch(pos,-1);
+        if pos >= self.tree.size(){
+            panic!("Index {} is out of bounds.", pos);
+        }
+        if !self.tree.get_bit(pos) {
+            panic!("Index {} is not the beginning of a node.", pos);
+        }
+        return self.tree.fwdsearch(pos,-1).unwrap();
     }
 
     pub fn ancestor(&self, pos_x:u64,pos_y:u64) -> bool {
@@ -135,9 +142,9 @@ impl Bp {
         return bit_vec;
     }
 
-    pub fn save_bp(tree: &BitVec) -> String{
+    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
         // define where to store file
-        let path = Path::new("our_bv_tree.txt");
+        let path = Path::new(filepath);
         let display = path.display();
 
         // Open a file in write-only mode, returns `io::Result<File>`
@@ -197,29 +204,29 @@ pub fn load_bp(file_path: &String) -> BitVec {
         return bit_vec;
     }
 
-pub fn save_bp(tree: &BitVec) -> String{
-    // define where to store file
-    let path = Path::new("our_bv_tree.txt");
-    let display = path.display();
+    pub fn save_bp(filepath: &String, tree: &BitVec) -> String{
+        // define where to store file
+        let path = Path::new(filepath);
+        let display = path.display();
 
-    // Open a file in write-only mode, returns `io::Result<File>`
-    let mut file = match File::create(&path) {
-        Err(why) => panic!("couldn't create {}: {}",
-                        display,
-                        why.description()),
-        Ok(file) => file,
-    };
-    
-    // serialisieren
-    let bv_tree_str : String = serde_json::to_string(tree).unwrap();
+        // Open a file in write-only mode, returns `io::Result<File>`
+        let mut file = match File::create(&path) {
+            Err(why) => panic!("couldn't create {}: {}",
+                            display,
+                            why.description()),
+            Ok(file) => file,
+        };
+        
+        // serialisieren
+        let bv_tree_str : String = serde_json::to_string(tree).unwrap();
 
-    // datei speichern
-    match file.write_all(bv_tree_str.as_bytes()) {
-        Err(why) => {
-            panic!("couldn't write to {}: {}", display,
-                                            why.description())
-        },
-        Ok(_) => println!("successfully wrote to {}", display),
+        // datei speichern
+        match file.write_all(bv_tree_str.as_bytes()) {
+            Err(why) => {
+                panic!("couldn't write to {}: {}", display,
+                                                why.description())
+            },
+            Ok(_) => println!("successfully wrote to {}", display),
+        }
+        return display.to_string();
     }
-    return display.to_string();
-}
