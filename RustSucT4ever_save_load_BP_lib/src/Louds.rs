@@ -9,6 +9,7 @@ struct Louds {
     data_struct: RankSelect,
 }
 
+
 impl Louds {
     fn degree(&self, x: u64) -> u64{
         self.next_0(x-1) - x
