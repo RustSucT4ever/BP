@@ -427,32 +427,6 @@ impl RangeMinMax{
     }
 
 
-
-/*
-fn part_excess(tree:RangeMinMax, rounded_pos:u32) -> u32{
-    
-    let curr_pos = 1;
-    let curr_scope = Tuple::new(0,tree.bal_parentheses_vec.len());
-    let curr_excess = 0;
-    while curr_pos!= rounded_pos{
-        if curr_scope.snd/2 > rounded_pos{
-            curr_pos = curr_pos * 2;
-            curr_scope.snd = (curr_scope.snd - curr_scope.fst) /2
-        }
-        else if curr_scope-snd/2 < rounded_pos{
-            curr_excess = curr_excess + tree.blockvector[curr_pos*2].of.excess;
-            curr_pos = (curr_pos*2)+1
-            curr_scope.fst = curr_scope.snd / 2;
-        }
-
-        else{
-            curr_pos = curr_pos*2
-        }
-    }
-    return curr_excess; 
-} */
-
-
 pub fn save_tree_as_file(tree: RangeMinMax) -> String{
     let path = Path::new("Range_min_max.txt");
         let display = path.display();
