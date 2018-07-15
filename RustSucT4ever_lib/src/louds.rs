@@ -88,6 +88,21 @@ pub fn load_louds(file_path: &String) -> BitVec {
         let contents = Louds::load_file(&file_path);
         // deserialisieren
         let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
+        let mut count_ones = 0;
+        let mut count_zeroes = 0;
+        //überprüfen, ob es auch ein louds ist.
+        for i in 0.. bit_vec.len() {
+            if bit_vec.get_bit(i)==true{
+                count_ones = count_ones +1;
+            }
+            else{
+                count_zeroes = count_zeroes +1
+            }
+        }
+        if count_ones != count_zeroes+1{
+            println!("falscher string!einsen: {}, nullen: {}", count_ones, count_zeroes);
+            return BitVec::new();
+        }
 
         // ausgeben
         return bit_vec;
