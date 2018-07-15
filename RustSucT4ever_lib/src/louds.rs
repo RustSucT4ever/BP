@@ -1,7 +1,13 @@
 extern crate bio;
 extern crate bv;
+extern crate serde;
+extern crate serde_json;
 use common_tree::BpLoudsCommonTrait;
 use bv::{BitVec, Bits};
+use std::fs::File;
+use std::io::prelude::*;
+use std::error::Error;
+use std::path::Path;
 use louds::bio::data_structures::rank_select::RankSelect;
 
 pub struct Louds {
@@ -50,6 +56,13 @@ impl Louds {
     pub fn prev_0(&self, x: u64) -> u64{
         self.data_struct.select_0(self.data_struct.rank_0(x).unwrap()).unwrap()
     }
+    pub fn load_file(file_path: &String) -> String{
+        let mut f = File::open(&file_path).expect("file not found");    
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+        return contents;
+    }
 }
 
 impl BpLoudsCommonTrait for Louds {
@@ -66,4 +79,84 @@ impl BpLoudsCommonTrait for Louds {
     fn next_sibling(&self, pos:u64) -> Option<u64>{
         Option::from(self.data_struct.select_0(self.data_struct.select_1(self.data_struct.rank_0(pos-1).unwrap()+1).unwrap()+1).unwrap()+1)
     }
+    
 }
+
+
+pub fn load_louds(file_path: &String) -> BitVec {
+        // datei lesen
+        let contents = Louds::load_file(&file_path);
+        // deserialisieren
+        let  bit_vec: BitVec = serde_json::from_str(&contents).unwrap();
+
+        // ausgeben
+        return bit_vec;
+    }
+
+pub fn load_louds_k(file_path: &String) -> usize {
+        // datei lesen
+        let contents = Louds::load_file(&file_path);
+        // deserialisieren
+        let  k: usize = serde_json::from_str(&contents).unwrap();
+
+        // ausgeben
+        return k;
+    }
+
+
+pub fn save_louds_k(filepath: &String, k: usize) -> String{
+    // define where to store file
+    let path = Path::new(filepath);
+    let display = path.display();
+
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}",
+                        display,
+                        why.description()),
+        Ok(file) => file,
+    };
+    
+    // serialisieren
+    let k_str : String = serde_json::to_string(&k).unwrap();
+
+    // datei speichern
+    match file.write_all(k_str.as_bytes()) {
+        Err(why) => {
+            panic!("couldn't write to {}: {}", display,
+                                            why.description())
+        },
+        Ok(_) => println!("successfully wrote to {}", display),
+    }
+    return display.to_string();
+}
+
+
+pub fn save_louds(filepath: &String, tree: &BitVec<u8>) -> String{
+    // define where to store file
+    let path = Path::new(filepath);
+    let display = path.display();
+
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}",
+                        display,
+                        why.description()),
+        Ok(file) => file,
+    };
+    
+    // serialisieren
+    let bv_tree_str : String = serde_json::to_string(tree).unwrap();
+
+    // datei speichern
+    match file.write_all(bv_tree_str.as_bytes()) {
+        Err(why) => {
+            panic!("couldn't write to {}: {}", display,
+                                            why.description())
+        },
+        Ok(_) => println!("successfully wrote to {}", display),
+    }
+    return display.to_string();
+}
+
+
