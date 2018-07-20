@@ -23,22 +23,20 @@ impl BpLoudsCommonTrait for Bp {
             return None;
         }
         self.maybe_panic(pos);
-        // exception for nodes with excess 2 (then return the root node)
         let possible = self.tree.bwdsearch(pos, -2);
         if possible.is_none() {
             return Option::from(0);
         }
-        // otherwise regular calculation
         return Option::from(possible.unwrap()+1);
     }
-    fn first_child(&self, pos:u64) -> Option<u64>{  //TODO turn return value to an optional for the case that a child does not exist.
+    fn first_child(&self, pos:u64) -> Option<u64>{
         self.maybe_panic(pos);
         if self.isleaf(pos){
             return None;
         }
         return Option::from(pos+1);
     }
-    fn next_sibling(&self, pos:u64) -> Option<u64>{ //TODO incase next sibling does not exist.
+    fn next_sibling(&self, pos:u64) -> Option<u64>{
         self.maybe_panic(pos);
         let n = self.tree.fwdsearch(pos, -1).unwrap()+1;
         if self.tree.get_bit(n) {
@@ -55,7 +53,6 @@ impl Bp {
     }
 
     pub fn pre_rank(&self, pos:u64) -> u64 {
-        //self.maybe_panic(pos);
         return  self.tree.rmm_rank_one(pos);
     }
 
@@ -98,6 +95,16 @@ impl Bp {
         if !self.tree.get_bit(pos) {
             panic!("Index {} is not the beginning of a node.", pos);
         }
+    }
+
+    pub fn is_legit_index(&self, pos: u64)->bool{
+        if pos >= self.tree.size(){
+            return false;
+        }
+        if !self.tree.get_bit(pos) {
+            return false;
+        }
+        return true;
     }
 }
 
